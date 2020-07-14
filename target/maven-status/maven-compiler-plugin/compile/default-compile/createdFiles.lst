@@ -1,0 +1,11 @@
+pl\ttpsc\smartparking\SmartparkingApplication.class
+pl\ttpsc\smartparking\persistence\service\PlateService.class
+pl\ttpsc\smartparking\api\PlateApi.class
+pl\ttpsc\smartparking\persistence\entity\Access.class
+pl\ttpsc\smartparking\controller\PlateController.class
+pl\ttpsc\smartparking\persistence\entity\Plate.class
+pl\ttpsc\smartparking\persistence\service\AccessService.class
+pl\ttpsc\smartparking\controller\AccessController.class
+pl\ttpsc\smartparking\persistence\repository\AccessRepository.class
+pl\ttpsc\smartparking\persistence\repository\PlateRepository.class
+pl\ttpsc\smartparking\api\AccessApi.class

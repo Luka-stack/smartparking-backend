@@ -1,0 +1,10 @@
+-------------------------------------------------------------------------------
+Test set: pl.ttpsc.smartparking.SmartparkingApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 4.797 s <<< FAILURE! - in pl.ttpsc.smartparking.SmartparkingApplicationTests
+contextLoads  Time elapsed: 0 s  <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'plateRepository' defined in pl.ttpsc.smartparking.persistence.repository.PlateRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaMappingContext' while setting bean property 'mappingContext'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.AnnotationException: No identifier specified for entity: pl.ttpsc.smartparking.persistence.entity.Access
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaMappingContext': Invocation of init method failed; nested exception is org.hibernate.AnnotationException: No identifier specified for entity: pl.ttpsc.smartparking.persistence.entity.Access
+Caused by: org.hibernate.AnnotationException: No identifier specified for entity: pl.ttpsc.smartparking.persistence.entity.Access
+
