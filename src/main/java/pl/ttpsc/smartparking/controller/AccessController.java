@@ -16,9 +16,17 @@ public class AccessController implements AccessApi {
     }
 
     @Override
-    public ResponseEntity<AccessEntity> update(AccessEntity accessEntity, Long id) {
+    public ResponseEntity<AccessEntity> createAccess(AccessEntity accessEntity) {
 
-        AccessEntity updatedAccess = accessService.update(id, accessEntity);
+        AccessEntity addedAccess = accessService.createAccess(accessEntity);
+
+        return ResponseEntity.ok(addedAccess);
+    }
+
+    @Override
+    public ResponseEntity<AccessEntity> updateAccess(AccessEntity accessEntity, Long id) {
+
+        AccessEntity updatedAccess = accessService.updateAccess(id, accessEntity);
 
         return ResponseEntity.ok(updatedAccess);
     }

@@ -7,6 +7,9 @@ import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 @RequestMapping("/api/plate")
 public interface PlateApi {
 
+    @PostMapping
+    ResponseEntity<PlateEntity> createPlate(@RequestBody PlateEntity plateEntity);
+
     @PutMapping("/{id}")
-    ResponseEntity<PlateEntity> update(@PathVariable Long id, @RequestBody PlateEntity plateEntity);
+    ResponseEntity<PlateEntity> updatePlate(@PathVariable Long id, @RequestBody PlateEntity plateEntity);
 }

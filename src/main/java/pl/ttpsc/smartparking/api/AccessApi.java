@@ -7,6 +7,9 @@ import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 @RequestMapping("/api/access")
 public interface AccessApi {
 
+    @PostMapping
+    ResponseEntity<AccessEntity> createAccess(@RequestBody AccessEntity accessEntity);
+
     @PutMapping("/{id}")
-    ResponseEntity<AccessEntity> update(@RequestBody AccessEntity accessEntity, @PathVariable Long id);
+    ResponseEntity<AccessEntity> updateAccess(@RequestBody AccessEntity accessEntity, @PathVariable Long id);
 }

@@ -37,41 +37,27 @@ class AccessServiceUT {
     }
 
     @Test
-    void shouldUpdateAccess() {
+    void shouldCreateAccess() {
 
         // given
-        when(accessRepository.findById(anyLong())).thenReturn(Optional.of(accessEntity));
         when(accessRepository.save(accessEntity)).thenReturn(accessEntity);
 
         // when
-        AccessEntity updatedAccess = accessService.update(1L, accessEntity);
+        AccessEntity createdAccess = accessService.createAccess(accessEntity);
 
         // then
-        assertEquals(updatedAccess, accessEntity);
+        assertEquals(createdAccess, accessEntity);
     }
 
     @Test
-    void shouldThrowNotFoundAccessException() {
-
-        // when
-        NotFoundAccessException exception = assertThrows(
-                NotFoundAccessException.class, () -> accessService.update(1L, accessEntity)
-        );
-
-        // then
-        assertEquals(exception.getMessage(), "Access not found");
-        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_NOT_FOUND);
-    }
-
-    @Test
-    void shouldThrowsInvalidInputExceptionWhenDateFromIsNull() {
+    void createShouldThrowsInvalidInputExceptionWhenDateFromIsNull() {
 
         // given
         accessEntity.setDateFrom(null);
 
         // when
         InvalidInputException exception = assertThrows(
-                InvalidInputException.class, () -> accessService.update(1L, accessEntity)
+                InvalidInputException.class, () -> accessService.createAccess(accessEntity)
         );
 
         // then
@@ -80,14 +66,73 @@ class AccessServiceUT {
     }
 
     @Test
-    void shouldThrowsInvalidInputExceptionWhenDateToIsNull() {
+    void createShouldThrowsInvalidInputExceptionWhenDateToIsNull() {
 
         // given
         accessEntity.setDateTo(null);
 
         // when
         InvalidInputException exception = assertThrows(
-                InvalidInputException.class, () -> accessService.update(1L, accessEntity)
+                InvalidInputException.class, () -> accessService.createAccess(accessEntity)
+        );
+
+        // then
+        assertEquals(exception.getMessage(), "Invalid input -> dateTo");
+        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
+    }
+
+    @Test
+    void shouldUpdateAccess() {
+
+        // given
+        when(accessRepository.findById(anyLong())).thenReturn(Optional.of(accessEntity));
+        when(accessRepository.save(accessEntity)).thenReturn(accessEntity);
+
+        // when
+        AccessEntity updatedAccess = accessService.updateAccess(1L, accessEntity);
+
+        // then
+        assertEquals(updatedAccess, accessEntity);
+    }
+
+    @Test
+    void updateShouldThrowNotFoundAccessException() {
+
+        // when
+        NotFoundAccessException exception = assertThrows(
+                NotFoundAccessException.class, () -> accessService.updateAccess(1L, accessEntity)
+        );
+
+        // then
+        assertEquals(exception.getMessage(), "Access not found");
+        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_NOT_FOUND);
+    }
+
+    @Test
+    void updateShouldThrowsInvalidInputExceptionWhenDateFromIsNull() {
+
+        // given
+        accessEntity.setDateFrom(null);
+
+        // when
+        InvalidInputException exception = assertThrows(
+                InvalidInputException.class, () -> accessService.updateAccess(1L, accessEntity)
+        );
+
+        // then
+        assertEquals(exception.getMessage(), "Invalid input -> dateFrom");
+        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
+    }
+
+    @Test
+    void updateShouldThrowsInvalidInputExceptionWhenDateToIsNull() {
+
+        // given
+        accessEntity.setDateTo(null);
+
+        // when
+        InvalidInputException exception = assertThrows(
+                InvalidInputException.class, () -> accessService.updateAccess(1L, accessEntity)
         );
 
         // then

@@ -16,9 +16,17 @@ public class PlateController implements PlateApi {
     }
 
     @Override
-    public ResponseEntity<PlateEntity> update(Long id, PlateEntity plateEntity) {
+    public ResponseEntity<PlateEntity> createPlate(PlateEntity plateEntity) {
 
-        PlateEntity updatedPlate = plateService.update(id, plateEntity);
+        PlateEntity createdPlate = plateService.createPlate(plateEntity);
+
+        return ResponseEntity.ok(createdPlate);
+    }
+
+    @Override
+    public ResponseEntity<PlateEntity> updatePlate(Long id, PlateEntity plateEntity) {
+
+        PlateEntity updatedPlate = plateService.updatePlate(id, plateEntity);
 
         return ResponseEntity.ok(updatedPlate);
     }

@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,13 +53,57 @@ public class AccessControllerUT {
     }
 
     @Test
+    void shouldAddAccess() throws Exception {
+
+        // when
+        when(accessService.createAccess(any())).thenReturn(accessEntity);
+
+        // then
+        mockMvc.perform(post(BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(accessEntity)))
+                .andExpect(jsonPath("$.dateFrom", equalTo(LocalDate.now().toString())))
+                .andExpect(jsonPath("$.dateTo", equalTo(LocalDate.now().plusDays(1).toString())))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void addShouldThrowInvalidInput() throws Exception {
+
+        // when
+        when(accessService.createAccess(any())).thenThrow(InvalidInputException.class);
+
+        // then
+        mockMvc.perform(post(BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(accessEntity)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void addShouldThrowNotFoundAccessException() throws Exception {
+
+        // when
+        when(accessService.createAccess(any())).thenThrow(NotFoundAccessException.class);
+
+        // then
+        mockMvc.perform(post(BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(accessEntity)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void shouldUpdateAccess() throws Exception {
 
         // given
         AccessEntity returnedAccessEntity = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(1));
 
         // when
-        when(accessService.update(anyLong(), any())).thenReturn(returnedAccessEntity);
+        when(accessService.updateAccess(anyLong(), any())).thenReturn(returnedAccessEntity);
 
         // then
         mockMvc.perform(put(BASE_URL + "/1")
@@ -71,10 +116,10 @@ public class AccessControllerUT {
     }
 
     @Test
-    void shouldThrowNotFoundAccessException() throws Exception {
+    void updateShouldThrowNotFoundAccessException() throws Exception {
 
         // when
-        when(accessService.update(anyLong(), any())).thenThrow(NotFoundAccessException.class);
+        when(accessService.updateAccess(anyLong(), any())).thenThrow(NotFoundAccessException.class);
 
         // then
         mockMvc.perform(put(BASE_URL + "/1")
@@ -85,10 +130,10 @@ public class AccessControllerUT {
     }
 
     @Test
-    void shouldThrowInvalidInput() throws Exception {
+    void updateShouldThrowInvalidInput() throws Exception {
 
        // when
-       when(accessService.update(anyLong(), any())).thenThrow(InvalidInputException.class);
+       when(accessService.updateAccess(anyLong(), any())).thenThrow(InvalidInputException.class);
 
        // then
         mockMvc.perform(put(BASE_URL + "/1")

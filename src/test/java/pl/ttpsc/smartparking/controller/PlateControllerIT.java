@@ -1,99 +1,133 @@
 package pl.ttpsc.smartparking.controller;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pl.ttpsc.smartparking.error.RestErrorAdvice;
-import pl.ttpsc.smartparking.error.exception.InvalidInputException;
-import pl.ttpsc.smartparking.error.exception.NotFoundPlateException;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.*;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
-import pl.ttpsc.smartparking.persistence.service.PlateService;
+import pl.ttpsc.smartparking.persistence.repository.PlateRepository;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static pl.ttpsc.smartparking.controller.AbstractRestControllerTest.asJsonString;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PlateControllerIT {
 
-    private final String BASE_URL = "/api/plate";
-    private final String PLATE_NUM = "FZ12345";
+    private static final String PATH = "http://localhost:%d/api/plate/%s";
 
-    @Mock
-    private PlateService plateService;
+    private String url;
 
-    @InjectMocks
-    private PlateController plateController;
+    @LocalServerPort
+    private int port;
 
     @Autowired
-    private MockMvc mockMvc;
+    private TestRestTemplate restTemplate;
 
-    private PlateEntity plateEntity;
+    @Autowired
+    private PlateRepository plateRepository;
+
+    private PlateEntity plateInBase;
 
     @BeforeEach
     void setUp() {
 
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(plateController)
-                .setControllerAdvice(new RestErrorAdvice()).build();
+        plateInBase = createPlateEntity("FKR12345");
+        plateRepository.save(plateInBase);
+    }
 
-        plateEntity = createPlateEntity(PLATE_NUM);
+    @AfterEach
+    void tearDown() {
+        
+        plateRepository.deleteAllInBatch();
     }
 
     @Test
-    void shouldUpdatePlate() throws Exception {
+    void shouldCreatePlate() {
 
         // given
-        PlateEntity returnedPlateEntity = createPlateEntity(PLATE_NUM);
+        url = String.format(PATH, port, "");
+        PlateEntity plateCreate = createPlateEntity("FZ12345");
 
         // when
-        when(plateService.update(anyLong(), any())).thenReturn(returnedPlateEntity);
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.POST,
+                new HttpEntity<>(plateCreate, new HttpHeaders()), PlateEntity.class);
+        Optional<PlateEntity> plateReturned = plateRepository.findById(response.getBody().getId());
 
         // then
-        mockMvc.perform(put(BASE_URL + "/1")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(plateEntity)))
-                .andExpect(jsonPath("$.plate", equalTo(PLATE_NUM)))
-                .andExpect(status().isOk());
+        assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
+        assertEquals(plateReturned.get().getPlate(), plateCreate.getPlate());
     }
 
     @Test
-    void shouldThrowNotFoundAccessException() throws Exception {
-        
+    void createShouldThrowInvalidInputWhenPlateIsNull() {
+
+        // given
+        url = String.format(PATH, port, "");
+        PlateEntity plateCreate = createPlateEntity("FZ12345");
+        plateCreate.setPlate(null);
+
         // when
-        when(plateService.update(anyLong(), any())).thenThrow(NotFoundPlateException.class);
-        
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.POST,
+                new HttpEntity<>(plateCreate, new HttpHeaders()), PlateEntity.class);
+
         // then
-        mockMvc.perform(put(BASE_URL + "/1")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(plateEntity)))
-                .andExpect(status().isNotFound());
+        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     @Test
-    void shouldThrowInvalidInput() throws Exception {
+    void shouldUpdatePlate() {
+
+        // given
+        url = String.format(PATH, port, plateInBase.getId());
+        PlateEntity plateUpdate = createPlateEntity("FZ12345");
 
         // when
-        when(plateService.update(anyLong(), any())).thenThrow(InvalidInputException.class);
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
+                new HttpEntity<>(plateUpdate, new HttpHeaders()), PlateEntity.class);
+        Optional<PlateEntity> plateReturned = plateRepository.findById(plateInBase.getId());
 
         // then
-        mockMvc.perform(put(BASE_URL + "/1")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(plateEntity)))
-                .andExpect(status().isBadRequest());
+        assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
+        assertEquals(plateReturned.get().getPlate(), plateUpdate.getPlate());
+    }
+
+    @Test
+    void updateShouldThrowNotFoundPlateException() {
+
+        // given
+        url = String.format(PATH, port, 190);
+        PlateEntity plateUpdate = createPlateEntity("FZ12345");
+
+        // when
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
+                new HttpEntity<>(plateUpdate, new HttpHeaders()), PlateEntity.class);
+
+        // then
+        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void updateShouldThrowInvalidInputWhenPlateIsNull() {
+
+        // given
+        url = String.format(PATH, port, plateInBase.getId());
+        PlateEntity plateUpdate = createPlateEntity("FZ12345");
+        plateUpdate.setPlate(null);
+
+        // when
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
+                new HttpEntity<>(plateUpdate, new HttpHeaders()), PlateEntity.class);
+
+        // then
+        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
     private PlateEntity createPlateEntity(String plate) {
@@ -103,6 +137,4 @@ class PlateControllerIT {
 
         return plateEntity;
     }
-
-
 }

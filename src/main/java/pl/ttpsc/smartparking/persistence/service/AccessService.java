@@ -16,7 +16,20 @@ public class AccessService {
         this.accessRepository = accessRepository;
     }
 
-    public AccessEntity update(Long id, AccessEntity accessEntity) {
+    public AccessEntity createAccess(AccessEntity accessEntity) {
+
+        if (accessEntity.getDateFrom() == null) {
+            throw new InvalidInputException("Invalid input -> dateFrom", ErrorCode.ACCESS_INVALID_INPUT);
+        }
+
+        if (accessEntity.getDateTo() == null) {
+            throw new InvalidInputException("Invalid input -> dateTo", ErrorCode.ACCESS_INVALID_INPUT);
+        }
+
+        return accessRepository.save(accessEntity);
+    }
+
+    public AccessEntity updateAccess(Long id, AccessEntity accessEntity) {
 
         if (accessEntity.getDateFrom() == null) {
             throw new InvalidInputException("Invalid input -> dateFrom", ErrorCode.ACCESS_INVALID_INPUT);

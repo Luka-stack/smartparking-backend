@@ -16,7 +16,16 @@ public class PlateService {
         this.plateRepository = plateRepository;
     }
 
-    public PlateEntity update(Long id, PlateEntity plateEntity) {
+    public PlateEntity createPlate(PlateEntity plateEntity) {
+
+        if (plateEntity.getPlate() == null) {
+            throw new InvalidInputException("Invalid input -> plate", ErrorCode.PLATE_INVALID_INPUT);
+        }
+
+        return plateRepository.save(plateEntity);
+    }
+
+    public PlateEntity updatePlate(Long id, PlateEntity plateEntity) {
 
         if (plateEntity.getPlate() == null) {
             throw new InvalidInputException("Invalid input -> plate", ErrorCode.PLATE_INVALID_INPUT);

@@ -1,6 +1,5 @@
 package pl.ttpsc.smartparking.persistence.service;
 
-import javassist.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -37,6 +36,35 @@ public class PlateServiceUT {
     }
 
     @Test
+    void shouldCreatePlate() {
+
+        // given
+        when(plateRepository.save(plateEntity)).thenReturn(plateEntity);
+
+        // when
+        PlateEntity createdPlate = plateService.createPlate(plateEntity);
+
+        // then
+        assertEquals(createdPlate, plateEntity);
+    }
+
+    @Test
+    void createShouldThrowsInvalidInputExceptionWhenPlateIsNull() {
+
+        // given
+        plateEntity.setPlate(null);
+
+        // when
+        InvalidInputException exception = assertThrows(
+                InvalidInputException.class, () -> plateService.createPlate(plateEntity)
+        );
+
+        // then
+        assertEquals(exception.getMessage(), "Invalid input -> plate");
+        assertEquals(exception.getErrorCode(), ErrorCode.PLATE_INVALID_INPUT);
+    }
+
+    @Test
     void shouldUpdatePlate() {
 
         // given
@@ -44,18 +72,18 @@ public class PlateServiceUT {
         when(plateRepository.save(plateEntity)).thenReturn(plateEntity);
 
         // when
-        PlateEntity updatedPlate = plateService.update(1L, plateEntity);
+        PlateEntity updatedPlate = plateService.updatePlate(1L, plateEntity);
 
         // then
         assertEquals(updatedPlate, plateEntity);
     }
 
     @Test
-    void shouldThrowNotFoundException() {
+    void updateShouldThrowNotFoundException() {
 
         // when
         NotFoundPlateException exception = assertThrows(
-                NotFoundPlateException.class, () -> plateService.update(1L, plateEntity)
+                NotFoundPlateException.class, () -> plateService.updatePlate(1L, plateEntity)
         );
 
         // then
@@ -64,14 +92,14 @@ public class PlateServiceUT {
     }
 
     @Test
-    void shouldThrowsInvalidInputExceptionWhenPlateIsNull() {
+    void updateShouldThrowsInvalidInputExceptionWhenPlateIsNull() {
 
         // given
         plateEntity.setPlate(null);
 
         // when
         InvalidInputException exception = assertThrows(
-                InvalidInputException.class, () -> plateService.update(1L, plateEntity)
+                InvalidInputException.class, () -> plateService.updatePlate(1L, plateEntity)
         );
 
         // then
