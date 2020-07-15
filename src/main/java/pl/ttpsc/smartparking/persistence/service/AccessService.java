@@ -7,6 +7,8 @@ import pl.ttpsc.smartparking.error.exception.NotFoundAccessException;
 import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.repository.AccessRepository;
 
+import java.util.List;
+
 @Service
 public class AccessService {
 
@@ -14,6 +16,17 @@ public class AccessService {
 
     public AccessService(final AccessRepository accessRepository) {
         this.accessRepository = accessRepository;
+    }
+
+    public AccessEntity getAccessById(Long id) {
+
+        return accessRepository.findById(id).orElseThrow(() ->
+                new NotFoundAccessException("Access not found", ErrorCode.ACCESS_NOT_FOUND));
+    }
+
+    public List<AccessEntity> getAllAccesses() {
+
+        return accessRepository.findAll();
     }
 
     public AccessEntity createAccess(AccessEntity accessEntity) {

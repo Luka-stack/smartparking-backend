@@ -16,13 +16,14 @@ import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.service.AccessService;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.ttpsc.smartparking.controller.AbstractRestControllerTest.asJsonString;
@@ -50,6 +51,53 @@ public class AccessControllerUT {
                 .setControllerAdvice(new RestErrorAdvice()).build();
 
         accessEntity = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(1));
+    }
+
+    @Test
+    void shouldReturnOneAccess() throws Exception {
+
+        // given
+        AccessEntity returnedAccessEntity = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(1));
+
+        // when
+        when(accessService.getAccessById(anyLong())).thenReturn(returnedAccessEntity);
+
+        // then
+        mockMvc.perform(get(BASE_URL + "/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.dateFrom", equalTo(LocalDate.now().toString())))
+                .andExpect(jsonPath("$.dateTo", equalTo(LocalDate.now().plusDays(1).toString())));
+    }
+
+    @Test
+    void shouldReturnListOfAccesses() throws Exception {
+
+        // given
+        List<AccessEntity> returnedAccessEntities = Arrays.asList(
+                createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(1)),
+                createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(1))
+        );
+
+        // when
+        when(accessService.getAllAccesses()).thenReturn(returnedAccessEntities);
+
+        // then
+        mockMvc.perform(get(BASE_URL))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].dateFrom", equalTo("2020-07-15")))
+                .andExpect(jsonPath("$[1].dateFrom", equalTo("2020-07-15")));
+
+    }
+
+    @Test
+    void getByIdShouldThrowNotFoundAccessException() throws Exception {
+
+        // when
+        when(accessService.getAccessById(any())).thenThrow(NotFoundAccessException.class);
+
+        // then
+        mockMvc.perform(get(BASE_URL + "/1"))
+                .andExpect(status().isNotFound());
     }
 
     @Test

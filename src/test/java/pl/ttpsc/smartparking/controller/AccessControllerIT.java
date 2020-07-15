@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.repository.AccessRepository;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,6 +55,54 @@ class AccessControllerIT {
     }
 
     @Test
+    void shouldReturnOneAccess() {
+
+        // given
+        url = String.format(PATH, port, accessInBase.getId());
+
+        // when
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.GET,
+                new HttpEntity<>(accessInBase, new HttpHeaders()), AccessEntity.class);
+
+        //then
+        assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
+        assertEquals(response.getBody().getDateFrom(), accessInBase.getDateFrom());
+        assertEquals(response.getBody().getDateTo(), accessInBase.getDateTo());
+    }
+
+    @Test
+    void shouldReturnListOfAccess() {
+
+        // given
+        url = String.format(PATH, port, "");
+
+        // when
+        ResponseEntity<List<AccessEntity>> response = restTemplate.exchange(url, HttpMethod.GET,
+                new HttpEntity<>(Collections.singletonList(accessInBase), new HttpHeaders()),
+                new ParameterizedTypeReference<List<AccessEntity>>() {});
+
+        //then
+        assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
+        assertEquals(response.getBody().size(), 1);
+        assertEquals(response.getBody().get(0).getDateFrom(), accessInBase.getDateFrom());
+    }
+
+    @Test
+    void getShouldThrowNotFoundAccessException() {
+
+        // given
+        url = String.format(PATH, port, 99);
+        AccessEntity accessReturned = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
+
+        // when
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.GET,
+                new HttpEntity<>(accessReturned, new HttpHeaders()), AccessEntity.class);
+
+        // then
+        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+    }
+
+    @Test
     void shouldCreateAccess() {
 
         // given
@@ -69,7 +121,7 @@ class AccessControllerIT {
     }
 
     @Test
-    void addShouldThrowInvalidInputWhenDateFromIsNull() {
+    void createShouldThrowInvalidInputWhenDateFromIsNull() {
 
         // given
         url = String.format(PATH, port, "");
@@ -85,7 +137,7 @@ class AccessControllerIT {
     }
 
     @Test
-    void addShouldThrowInvalidInputWhenDateToIsNull() {
+    void createShouldThrowInvalidInputWhenDateToIsNull() {
 
         // given
         url = String.format(PATH, port, "");
@@ -99,7 +151,6 @@ class AccessControllerIT {
         // then
         assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
-
 
     @Test
     void shouldUpdateAccess() {

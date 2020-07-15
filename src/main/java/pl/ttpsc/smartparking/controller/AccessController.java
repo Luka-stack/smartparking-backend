@@ -6,6 +6,8 @@ import pl.ttpsc.smartparking.api.AccessApi;
 import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.service.AccessService;
 
+import java.util.List;
+
 @RestController
 public class AccessController implements AccessApi {
 
@@ -16,18 +18,26 @@ public class AccessController implements AccessApi {
     }
 
     @Override
+    public ResponseEntity<AccessEntity> getAccessById(Long id) {
+
+        return ResponseEntity.ok(accessService.getAccessById(id));
+    }
+
+    @Override
+    public ResponseEntity<List<AccessEntity>> getAllAccesses() {
+
+        return ResponseEntity.ok(accessService.getAllAccesses());
+    }
+
+    @Override
     public ResponseEntity<AccessEntity> createAccess(AccessEntity accessEntity) {
 
-        AccessEntity addedAccess = accessService.createAccess(accessEntity);
-
-        return ResponseEntity.ok(addedAccess);
+        return ResponseEntity.ok(accessService.createAccess(accessEntity));
     }
 
     @Override
     public ResponseEntity<AccessEntity> updateAccess(AccessEntity accessEntity, Long id) {
 
-        AccessEntity updatedAccess = accessService.updateAccess(id, accessEntity);
-
-        return ResponseEntity.ok(updatedAccess);
+        return ResponseEntity.ok(accessService.updateAccess(id, accessEntity));
     }
 }

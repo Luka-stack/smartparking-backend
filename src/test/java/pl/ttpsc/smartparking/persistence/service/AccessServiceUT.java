@@ -1,5 +1,7 @@
 package pl.ttpsc.smartparking.persistence.service;
 
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,6 +18,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+
+
 
 class AccessServiceUT {
 
@@ -37,6 +41,47 @@ class AccessServiceUT {
     }
 
     @Test
+    void shouldReturnOneAccess() {
+
+        // given
+        when(accessRepository.findById(anyLong())).thenReturn(Optional.ofNullable(accessEntity));
+
+        // when
+        AccessEntity returnedAccess = accessService.getAccessById(1L);
+
+        // then
+        assertEquals(returnedAccess, accessEntity);
+    }
+
+    @Test
+    void shouldReturnListOfAccesses() {
+
+        // given
+        when(accessRepository.findAll()).thenReturn(Arrays.asList(accessEntity, accessEntity));
+
+        // when
+        List<AccessEntity> returnedListOfAccesses = accessService.getAllAccesses();
+
+        // then
+        assertEquals(returnedListOfAccesses.size(), 2);
+        assertEquals(returnedListOfAccesses.get(0), accessEntity);
+        assertEquals(returnedListOfAccesses.get(1), accessEntity);
+    }
+
+    @Test
+    void getShouldThrowNotFoundAccessException() {
+
+        // when
+        NotFoundAccessException exception = assertThrows(
+                NotFoundAccessException.class, () -> accessService.getAccessById(1L)
+        );
+
+        // then
+        assertEquals(exception.getMessage(), "Access not found");
+        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_NOT_FOUND);
+    }
+
+    @Test
     void shouldCreateAccess() {
 
         // given
@@ -50,7 +95,7 @@ class AccessServiceUT {
     }
 
     @Test
-    void createShouldThrowsInvalidInputExceptionWhenDateFromIsNull() {
+    void createShouldThrowInvalidInputExceptionWhenDateFromIsNull() {
 
         // given
         accessEntity.setDateFrom(null);
@@ -66,7 +111,7 @@ class AccessServiceUT {
     }
 
     @Test
-    void createShouldThrowsInvalidInputExceptionWhenDateToIsNull() {
+    void createShouldThrowInvalidInputExceptionWhenDateToIsNull() {
 
         // given
         accessEntity.setDateTo(null);
@@ -109,7 +154,7 @@ class AccessServiceUT {
     }
 
     @Test
-    void updateShouldThrowsInvalidInputExceptionWhenDateFromIsNull() {
+    void updateShouldThrowInvalidInputExceptionWhenDateFromIsNull() {
 
         // given
         accessEntity.setDateFrom(null);
@@ -125,7 +170,7 @@ class AccessServiceUT {
     }
 
     @Test
-    void updateShouldThrowsInvalidInputExceptionWhenDateToIsNull() {
+    void updateShouldThrowInvalidInputExceptionWhenDateToIsNull() {
 
         // given
         accessEntity.setDateTo(null);

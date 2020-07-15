@@ -1,5 +1,7 @@
 package pl.ttpsc.smartparking.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -18,6 +20,7 @@ public class PlateEntity {
     private String plate;
 
     @OneToMany(mappedBy = "plates")
+    @JsonIgnore
     private Set<AccessEntity> access;
 
     public PlateEntity() {

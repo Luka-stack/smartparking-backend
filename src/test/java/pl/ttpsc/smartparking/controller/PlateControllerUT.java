@@ -11,16 +11,22 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.ttpsc.smartparking.error.RestErrorAdvice;
 import pl.ttpsc.smartparking.error.exception.InvalidInputException;
+import pl.ttpsc.smartparking.error.exception.NotFoundAccessException;
 import pl.ttpsc.smartparking.error.exception.NotFoundPlateException;
+import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.service.PlateService;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.ttpsc.smartparking.controller.AbstractRestControllerTest.asJsonString;
@@ -49,6 +55,52 @@ class PlateControllerUT {
                 .setControllerAdvice(new RestErrorAdvice()).build();
 
         plateEntity = createPlateEntity(PLATE_NUM);
+    }
+
+    @Test
+    void shouldReturnOnePlate() throws Exception {
+
+        // given
+        PlateEntity returnedPlateEntity = createPlateEntity(PLATE_NUM);
+
+        // when
+        when(plateService.getPlateById(anyLong())).thenReturn(returnedPlateEntity);
+
+        // then
+        mockMvc.perform(get(BASE_URL + "/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.plate", equalTo(PLATE_NUM)));
+    }
+
+    @Test
+    void shouldReturnListOfPlates() throws Exception {
+
+        // given
+        List<PlateEntity> returnedPlateEntities = Arrays.asList(
+                createPlateEntity(PLATE_NUM),
+                createPlateEntity(PLATE_NUM)
+        );
+
+        // when
+        when(plateService.getAllPlates()).thenReturn(returnedPlateEntities);
+
+        // then
+        mockMvc.perform(get(BASE_URL))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].plate", equalTo(PLATE_NUM)))
+                .andExpect(jsonPath("$[1].plate", equalTo(PLATE_NUM)));
+
+    }
+
+    @Test
+    void getByIdShouldThrowNotFoundPlateException() throws Exception {
+
+        // when
+        when(plateService.getPlateById(any())).thenThrow(NotFoundPlateException.class);
+
+        // then
+        mockMvc.perform(get(BASE_URL + "/1"))
+                .andExpect(status().isNotFound());
     }
 
     @Test

@@ -6,6 +6,8 @@ import pl.ttpsc.smartparking.api.PlateApi;
 import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.service.PlateService;
 
+import java.util.List;
+
 @RestController
 public class PlateController implements PlateApi {
 
@@ -13,6 +15,18 @@ public class PlateController implements PlateApi {
 
     public PlateController(final PlateService plateService) {
         this.plateService = plateService;
+    }
+
+    @Override
+    public ResponseEntity<PlateEntity> getAccessById(Long id) {
+
+        return ResponseEntity.ok(plateService.getPlateById(id));
+    }
+
+    @Override
+    public ResponseEntity<List<PlateEntity>> getAllAccesses() {
+
+       return ResponseEntity.ok(plateService.getAllPlates());
     }
 
     @Override
