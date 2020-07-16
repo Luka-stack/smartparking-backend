@@ -40,4 +40,12 @@ public class AccessController implements AccessApi {
 
         return ResponseEntity.ok(accessService.updateAccess(id, accessEntity));
     }
+
+    @Override
+    public ResponseEntity<?> deleteAccess(Long id) {
+
+        accessService.deleteAccessById(id);
+
+        return ResponseEntity.ok().body(null);
+    }
 }

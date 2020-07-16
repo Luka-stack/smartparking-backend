@@ -22,6 +22,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -84,8 +85,8 @@ public class AccessControllerUT {
         // then
         mockMvc.perform(get(BASE_URL))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].dateFrom", equalTo("2020-07-15")))
-                .andExpect(jsonPath("$[1].dateFrom", equalTo("2020-07-15")));
+                .andExpect(jsonPath("$[0].dateFrom", equalTo(LocalDate.now().toString())))
+                .andExpect(jsonPath("$[1].dateFrom", equalTo(LocalDate.now().toString())));
 
     }
 
@@ -189,6 +190,16 @@ public class AccessControllerUT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(accessEntity)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldDeleteAccessById() throws Exception {
+
+        mockMvc.perform(delete(BASE_URL + "/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(accessService).deleteAccessById(anyLong());
     }
 
     private AccessEntity createAccessEntity(LocalDate dateFrom, LocalDate dateTo) {

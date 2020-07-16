@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class PlateServiceUT {
 
@@ -150,5 +150,17 @@ public class PlateServiceUT {
         // then
         assertEquals(exception.getMessage(), "Invalid input -> plate");
         assertEquals(exception.getErrorCode(), ErrorCode.PLATE_INVALID_INPUT);
+    }
+
+    @Test
+    void shouldDeleteAccessById() {
+
+        // given
+
+        // when
+        plateService.deletePlateById(1L);
+
+        // then
+        verify(plateRepository, times(1)).deleteById(anyLong());
     }
 }

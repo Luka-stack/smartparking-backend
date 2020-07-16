@@ -58,4 +58,9 @@ public class AccessService {
 
         return accessRepository.save(accessEntity);
     }
+
+    public void deleteAccessById(Long id) {
+
+        accessRepository.deleteById(id);
+    }
 }

@@ -44,4 +44,12 @@ public class PlateController implements PlateApi {
 
         return ResponseEntity.ok(updatedPlate);
     }
+
+    @Override
+    public ResponseEntity<?> deletePlate(Long id) {
+
+        plateService.deletePlateById(id);
+
+        return ResponseEntity.ok().body(null);
+    }
 }

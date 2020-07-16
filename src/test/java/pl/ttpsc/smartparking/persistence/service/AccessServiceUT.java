@@ -17,8 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
-
+import static org.mockito.Mockito.*;
 
 
 class AccessServiceUT {
@@ -183,5 +182,17 @@ class AccessServiceUT {
         // then
         assertEquals(exception.getMessage(), "Invalid input -> dateTo");
         assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
+    }
+
+    @Test
+    void shouldDeleteAccessById() {
+
+        // given
+
+        // when
+        accessService.deleteAccessById(1L);
+
+        // then
+        verify(accessRepository, times(1)).deleteById(anyLong());
     }
 }

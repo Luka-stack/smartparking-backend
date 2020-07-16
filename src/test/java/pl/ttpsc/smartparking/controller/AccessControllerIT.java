@@ -15,12 +15,12 @@ import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.repository.AccessRepository;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,7 +28,7 @@ class AccessControllerIT {
 
     private static final String PATH = "http://localhost:%d/api/access/%s";
 
-    private String url;
+    private String uri;
 
     @LocalServerPort
     private int port;
@@ -58,10 +58,10 @@ class AccessControllerIT {
     void shouldReturnOneAccess() {
 
         // given
-        url = String.format(PATH, port, accessInBase.getId());
+        uri = String.format(PATH, port, accessInBase.getId());
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.GET,
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.GET,
                 new HttpEntity<>(accessInBase, new HttpHeaders()), AccessEntity.class);
 
         //then
@@ -74,10 +74,10 @@ class AccessControllerIT {
     void shouldReturnListOfAccess() {
 
         // given
-        url = String.format(PATH, port, "");
+        uri = String.format(PATH, port, "");
 
         // when
-        ResponseEntity<List<AccessEntity>> response = restTemplate.exchange(url, HttpMethod.GET,
+        ResponseEntity<List<AccessEntity>> response = restTemplate.exchange(uri, HttpMethod.GET,
                 new HttpEntity<>(Collections.singletonList(accessInBase), new HttpHeaders()),
                 new ParameterizedTypeReference<List<AccessEntity>>() {});
 
@@ -91,11 +91,11 @@ class AccessControllerIT {
     void getShouldThrowNotFoundAccessException() {
 
         // given
-        url = String.format(PATH, port, 99);
+        uri = String.format(PATH, port, 99);
         AccessEntity accessReturned = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.GET,
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.GET,
                 new HttpEntity<>(accessReturned, new HttpHeaders()), AccessEntity.class);
 
         // then
@@ -106,11 +106,11 @@ class AccessControllerIT {
     void shouldCreateAccess() {
 
         // given
-        url = String.format(PATH, port, "");
+        uri = String.format(PATH, port, "");
         AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.POST,
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
                 new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
         Optional<AccessEntity> accessReturned = accessRepository.findById(response.getBody().getId());
 
@@ -124,12 +124,12 @@ class AccessControllerIT {
     void createShouldThrowInvalidInputWhenDateFromIsNull() {
 
         // given
-        url = String.format(PATH, port, "");
+        uri = String.format(PATH, port, "");
         AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
         createAccess.setDateTo(null);
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.POST,
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
                 new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
 
         // then
@@ -140,12 +140,12 @@ class AccessControllerIT {
     void createShouldThrowInvalidInputWhenDateToIsNull() {
 
         // given
-        url = String.format(PATH, port, "");
+        uri = String.format(PATH, port, "");
         AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
         createAccess.setDateTo(null);
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.POST,
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
                 new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
 
         // then
@@ -156,11 +156,11 @@ class AccessControllerIT {
     void shouldUpdateAccess() {
 
         // given
-        url = String.format(PATH, port, accessInBase.getId());
+        uri = String.format(PATH, port, accessInBase.getId());
         AccessEntity accessUpdate = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
                 new HttpEntity<>(accessUpdate, new HttpHeaders()), AccessEntity.class);
         Optional<AccessEntity> accessReturned = accessRepository.findById(accessInBase.getId());
 
@@ -174,11 +174,11 @@ class AccessControllerIT {
     void updateShouldThrowNotFoundAccessException() {
 
         // given
-        url = String.format(PATH, port, 99);
+        uri = String.format(PATH, port, 99);
         AccessEntity accessUpdate = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
                 new HttpEntity<>(accessUpdate, new HttpHeaders()), AccessEntity.class);
 
         // then
@@ -189,12 +189,12 @@ class AccessControllerIT {
     void updateShouldThrowInvalidInputWhenDateFromIsNull() {
 
         // given
-        url = String.format(PATH, port, accessInBase.getId());
+        uri = String.format(PATH, port, accessInBase.getId());
         AccessEntity accessUpdate = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
         accessUpdate.setDateFrom(null);
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
                 new HttpEntity<>(accessUpdate, new HttpHeaders()), AccessEntity.class);
 
         // then
@@ -205,16 +205,30 @@ class AccessControllerIT {
     void updateShouldThrowInvalidInputWhenDateToIsNull() {
 
         // given
-        url = String.format(PATH, port, accessInBase.getId());
+        uri = String.format(PATH, port, accessInBase.getId());
         AccessEntity accessUpdate = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
         accessUpdate.setDateTo(null);
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
+        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
                 new HttpEntity<>(accessUpdate, new HttpHeaders()), AccessEntity.class);
 
         // then
         assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void shouldDeleteAccessById() {
+
+        //given
+        uri = String.format(PATH, port, accessInBase.getId());
+
+        //when
+        restTemplate.delete(uri);
+        boolean isExist = accessRepository.existsById(accessInBase.getId());
+
+        //then
+        assertFalse(isExist);
     }
 
     private AccessEntity createAccessEntity(LocalDate dateFrom, LocalDate dateTo) {

@@ -20,4 +20,7 @@ public interface AccessApi {
 
     @PutMapping("/{id}")
     ResponseEntity<AccessEntity> updateAccess(@RequestBody AccessEntity accessEntity, @PathVariable Long id);
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> deleteAccess(@PathVariable Long id);
 }

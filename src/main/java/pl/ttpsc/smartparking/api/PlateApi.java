@@ -20,4 +20,7 @@ public interface PlateApi {
 
     @PutMapping("/{id}")
     ResponseEntity<PlateEntity> updatePlate(@PathVariable Long id, @RequestBody PlateEntity plateEntity);
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> deletePlate(@PathVariable Long id);
 }

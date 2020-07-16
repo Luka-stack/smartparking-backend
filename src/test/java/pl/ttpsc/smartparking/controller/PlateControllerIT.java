@@ -11,11 +11,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.repository.PlateRepository;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +26,7 @@ class PlateControllerIT {
 
     private static final String PATH = "http://localhost:%d/api/plate/%s";
 
-    private String url;
+    private String uri;
 
     @LocalServerPort
     private int port;
@@ -58,10 +56,10 @@ class PlateControllerIT {
     void shouldReturnOnePlate() {
 
         // given
-        url = String.format(PATH, port, plateInBase.getId());
+        uri = String.format(PATH, port, plateInBase.getId());
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.GET,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.GET,
                 new HttpEntity<>(plateInBase, new HttpHeaders()), PlateEntity.class);
 
         //then
@@ -73,10 +71,10 @@ class PlateControllerIT {
     void shouldReturnListOfPlates() {
 
         // given
-        url = String.format(PATH, port, "");
+        uri = String.format(PATH, port, "");
 
         // when
-        ResponseEntity<List<PlateEntity>> response = restTemplate.exchange(url, HttpMethod.GET,
+        ResponseEntity<List<PlateEntity>> response = restTemplate.exchange(uri, HttpMethod.GET,
                 new HttpEntity<>(Collections.singletonList(plateInBase), new HttpHeaders()),
                 new ParameterizedTypeReference<List<PlateEntity>>() {});
 
@@ -90,11 +88,11 @@ class PlateControllerIT {
     void getShouldThrowNotFoundPlateException() {
 
         // given
-        url = String.format(PATH, port, 99);
+        uri = String.format(PATH, port, 99);
         PlateEntity plateReturned = createPlateEntity("FZ12345");
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.GET,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.GET,
                 new HttpEntity<>(plateReturned, new HttpHeaders()), PlateEntity.class);
 
         // then
@@ -105,11 +103,11 @@ class PlateControllerIT {
     void shouldCreatePlate() {
 
         // given
-        url = String.format(PATH, port, "");
+        uri = String.format(PATH, port, "");
         PlateEntity plateCreate = createPlateEntity("FZ12345");
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.POST,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
                 new HttpEntity<>(plateCreate, new HttpHeaders()), PlateEntity.class);
         Optional<PlateEntity> plateReturned = plateRepository.findById(response.getBody().getId());
 
@@ -122,12 +120,12 @@ class PlateControllerIT {
     void createShouldThrowInvalidInputWhenPlateIsNull() {
 
         // given
-        url = String.format(PATH, port, "");
+        uri = String.format(PATH, port, "");
         PlateEntity plateCreate = createPlateEntity("FZ12345");
         plateCreate.setPlate(null);
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.POST,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
                 new HttpEntity<>(plateCreate, new HttpHeaders()), PlateEntity.class);
 
         // then
@@ -138,11 +136,11 @@ class PlateControllerIT {
     void shouldUpdatePlate() {
 
         // given
-        url = String.format(PATH, port, plateInBase.getId());
+        uri = String.format(PATH, port, plateInBase.getId());
         PlateEntity plateUpdate = createPlateEntity("FZ12345");
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
                 new HttpEntity<>(plateUpdate, new HttpHeaders()), PlateEntity.class);
         Optional<PlateEntity> plateReturned = plateRepository.findById(plateInBase.getId());
 
@@ -155,11 +153,11 @@ class PlateControllerIT {
     void updateShouldThrowNotFoundPlateException() {
 
         // given
-        url = String.format(PATH, port, 190);
+        uri = String.format(PATH, port, 190);
         PlateEntity plateUpdate = createPlateEntity("FZ12345");
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
                 new HttpEntity<>(plateUpdate, new HttpHeaders()), PlateEntity.class);
 
         // then
@@ -170,16 +168,30 @@ class PlateControllerIT {
     void updateShouldThrowInvalidInputWhenPlateIsNull() {
 
         // given
-        url = String.format(PATH, port, plateInBase.getId());
+        uri = String.format(PATH, port, plateInBase.getId());
         PlateEntity plateUpdate = createPlateEntity("FZ12345");
         plateUpdate.setPlate(null);
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
                 new HttpEntity<>(plateUpdate, new HttpHeaders()), PlateEntity.class);
 
         // then
         assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void shouldDeleteAccessById() {
+
+        //given
+        uri = String.format(PATH, port, plateInBase.getId());
+
+        //when
+        restTemplate.delete(uri);
+        boolean isExist = plateRepository.existsById(plateInBase.getId());
+
+        //then
+        assertFalse(isExist);
     }
 
     private PlateEntity createPlateEntity(String plate) {

@@ -24,6 +24,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -179,6 +180,16 @@ class PlateControllerUT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(plateEntity)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldDeleteAccessById() throws Exception {
+
+        mockMvc.perform(delete(BASE_URL + "/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(plateService).deletePlateById(anyLong());
     }
 
     private PlateEntity createPlateEntity(String plate) {

@@ -51,4 +51,9 @@ public class PlateService {
 
         return plateRepository.save(plateEntity);
     }
+
+    public void deletePlateById(Long id) {
+
+        plateRepository.deleteById(id);
+    }
 }
