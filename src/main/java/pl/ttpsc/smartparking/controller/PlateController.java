@@ -18,13 +18,13 @@ public class PlateController implements PlateApi {
     }
 
     @Override
-    public ResponseEntity<PlateEntity> getAccessById(Long id) {
+    public ResponseEntity<PlateEntity> getPlateById(Long id) {
 
         return ResponseEntity.ok(plateService.getPlateById(id));
     }
 
     @Override
-    public ResponseEntity<List<PlateEntity>> getAllAccesses() {
+    public ResponseEntity<List<PlateEntity>> getAllPlate() {
 
        return ResponseEntity.ok(plateService.getAllPlates());
     }

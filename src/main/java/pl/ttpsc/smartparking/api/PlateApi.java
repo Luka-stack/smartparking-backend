@@ -10,10 +10,10 @@ import java.util.List;
 public interface PlateApi {
 
     @GetMapping("/{id}")
-    ResponseEntity<PlateEntity> getAccessById(@PathVariable Long id);
+    ResponseEntity<PlateEntity> getPlateById(@PathVariable Long id);
 
     @GetMapping
-    ResponseEntity<List<PlateEntity>> getAllAccesses();
+    ResponseEntity<List<PlateEntity>> getAllPlate();
 
     @PostMapping
     ResponseEntity<PlateEntity> createPlate(@RequestBody PlateEntity plateEntity);
