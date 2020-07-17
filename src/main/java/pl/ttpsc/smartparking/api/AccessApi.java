@@ -15,6 +15,9 @@ public interface AccessApi {
     @GetMapping
     ResponseEntity<List<AccessEntity>> getAllAccesses();
 
+    @GetMapping("/alpr/{plate}")
+    ResponseEntity<AccessEntity> getAccessByPlate(@PathVariable String plate);
+
     @PostMapping
     ResponseEntity<AccessEntity> createAccess(@RequestBody AccessEntity accessEntity);
 

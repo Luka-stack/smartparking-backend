@@ -8,6 +8,7 @@ import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.repository.AccessRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccessService {
@@ -27,6 +28,17 @@ public class AccessService {
     public List<AccessEntity> getAllAccesses() {
 
         return accessRepository.findAll();
+    }
+
+    public AccessEntity getAccessByPlate(String plate) {
+
+        Optional<AccessEntity> accessEntity = accessRepository.getAccessByPlate(plate);
+
+        if (!accessEntity.isPresent()) {
+            throw new NotFoundAccessException("Access not found", ErrorCode.ACCESS_NOT_FOUND);
+        }
+
+        return accessEntity.get();
     }
 
     public AccessEntity createAccess(AccessEntity accessEntity) {
