@@ -64,7 +64,7 @@ class PlateControllerIT {
 
         //then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
-        assertEquals(response.getBody().getPlate(), plateInBase.getPlate());
+        assertEquals(response.getBody().getPlateStr(), plateInBase.getPlateStr());
     }
 
     @Test
@@ -81,7 +81,7 @@ class PlateControllerIT {
         //then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
         assertEquals(response.getBody().size(), 1);
-        assertEquals(response.getBody().get(0).getPlate(), plateInBase.getPlate());
+        assertEquals(response.getBody().get(0).getPlateStr(), plateInBase.getPlateStr());
     }
 
     @Test
@@ -113,7 +113,7 @@ class PlateControllerIT {
 
         // then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
-        assertEquals(plateReturned.get().getPlate(), plateCreate.getPlate());
+        assertEquals(plateReturned.get().getPlateStr(), plateCreate.getPlateStr());
     }
 
     @Test
@@ -122,7 +122,7 @@ class PlateControllerIT {
         // given
         uri = String.format(PATH, port, "");
         PlateEntity plateCreate = createPlateEntity("FZ12345");
-        plateCreate.setPlate(null);
+        plateCreate.setPlateStr(null);
 
         // when
         ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
@@ -146,7 +146,7 @@ class PlateControllerIT {
 
         // then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
-        assertEquals(plateReturned.get().getPlate(), plateUpdate.getPlate());
+        assertEquals(plateReturned.get().getPlateStr(), plateUpdate.getPlateStr());
     }
 
     @Test
@@ -170,7 +170,7 @@ class PlateControllerIT {
         // given
         uri = String.format(PATH, port, plateInBase.getId());
         PlateEntity plateUpdate = createPlateEntity("FZ12345");
-        plateUpdate.setPlate(null);
+        plateUpdate.setPlateStr(null);
 
         // when
         ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
@@ -197,7 +197,7 @@ class PlateControllerIT {
     private PlateEntity createPlateEntity(String plate) {
 
         PlateEntity plateEntity = new PlateEntity();
-        plateEntity.setPlate(plate);
+        plateEntity.setPlateStr(plate);
 
         return plateEntity;
     }

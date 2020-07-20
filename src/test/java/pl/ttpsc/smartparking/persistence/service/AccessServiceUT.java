@@ -80,50 +80,50 @@ class AccessServiceUT {
         assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_NOT_FOUND);
     }
 
-    @Test
-    void shouldCreateAccess() {
-
-        // given
-        when(accessRepository.save(accessEntity)).thenReturn(accessEntity);
-
-        // when
-        AccessEntity createdAccess = accessService.createAccess(accessEntity);
-
-        // then
-        assertEquals(createdAccess, accessEntity);
-    }
-
-    @Test
-    void createShouldThrowInvalidInputExceptionWhenDateFromIsNull() {
-
-        // given
-        accessEntity.setDateFrom(null);
-
-        // when
-        InvalidInputException exception = assertThrows(
-                InvalidInputException.class, () -> accessService.createAccess(accessEntity)
-        );
-
-        // then
-        assertEquals(exception.getMessage(), "Invalid input -> dateFrom");
-        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
-    }
-
-    @Test
-    void createShouldThrowInvalidInputExceptionWhenDateToIsNull() {
-
-        // given
-        accessEntity.setDateTo(null);
-
-        // when
-        InvalidInputException exception = assertThrows(
-                InvalidInputException.class, () -> accessService.createAccess(accessEntity)
-        );
-
-        // then
-        assertEquals(exception.getMessage(), "Invalid input -> dateTo");
-        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
-    }
+//    @Test
+//    void shouldCreateAccess() {
+//
+//        // given
+//        when(accessRepository.save(accessEntity)).thenReturn(accessEntity);
+//
+//        // when
+//        AccessEntity createdAccess = accessService.createAccess(accessEntity);
+//
+//        // then
+//        assertEquals(createdAccess, accessEntity);
+//    }
+//
+//    @Test
+//    void createShouldThrowInvalidInputExceptionWhenDateFromIsNull() {
+//
+//        // given
+//        accessEntity.setDateFrom(null);
+//
+//        // when
+//        InvalidInputException exception = assertThrows(
+//                InvalidInputException.class, () -> accessService.createAccess(accessEntity)
+//        );
+//
+//        // then
+//        assertEquals(exception.getMessage(), "Invalid input -> dateFrom");
+//        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
+//    }
+//
+//    @Test
+//    void createShouldThrowInvalidInputExceptionWhenDateToIsNull() {
+//
+//        // given
+//        accessEntity.setDateTo(null);
+//
+//        // when
+//        InvalidInputException exception = assertThrows(
+//                InvalidInputException.class, () -> accessService.createAccess(accessEntity)
+//        );
+//
+//        // then
+//        assertEquals(exception.getMessage(), "Invalid input -> dateTo");
+//        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
+//    }
 
     @Test
     void shouldUpdateAccess() {

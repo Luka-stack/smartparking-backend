@@ -8,7 +8,6 @@ import pl.ttpsc.smartparking.error.exception.ErrorCode;
 import pl.ttpsc.smartparking.error.exception.InvalidInputException;
 import pl.ttpsc.smartparking.error.exception.NotFoundAccessException;
 import pl.ttpsc.smartparking.error.exception.NotFoundPlateException;
-import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.repository.PlateRepository;
 
@@ -36,7 +35,7 @@ public class PlateServiceUT {
         plateService = new PlateService(plateRepository);
 
         plateEntity = new PlateEntity();
-        plateEntity.setPlate("FZI12345");
+        plateEntity.setPlateStr("FZI12345");
     }
 
     @Test
@@ -97,7 +96,7 @@ public class PlateServiceUT {
     void createShouldThrowsInvalidInputExceptionWhenPlateIsNull() {
 
         // given
-        plateEntity.setPlate(null);
+        plateEntity.setPlateStr(null);
 
         // when
         InvalidInputException exception = assertThrows(
@@ -140,7 +139,7 @@ public class PlateServiceUT {
     void updateShouldThrowsInvalidInputExceptionWhenPlateIsNull() {
 
         // given
-        plateEntity.setPlate(null);
+        plateEntity.setPlateStr(null);
 
         // when
         InvalidInputException exception = assertThrows(

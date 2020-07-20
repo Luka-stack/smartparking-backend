@@ -11,13 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.ttpsc.smartparking.error.RestErrorAdvice;
 import pl.ttpsc.smartparking.error.exception.InvalidInputException;
-import pl.ttpsc.smartparking.error.exception.NotFoundAccessException;
 import pl.ttpsc.smartparking.error.exception.NotFoundPlateException;
-import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.service.PlateService;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -195,7 +192,7 @@ class PlateControllerUT {
     private PlateEntity createPlateEntity(String plate) {
 
         PlateEntity plateEntity = new PlateEntity();
-        plateEntity.setPlate(plate);
+        plateEntity.setPlateStr(plate);
 
         return plateEntity;
     }

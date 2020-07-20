@@ -101,49 +101,49 @@ public class AccessControllerUT {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    void shouldAddAccess() throws Exception {
-
-        // when
-        when(accessService.createAccess(any())).thenReturn(accessEntity);
-
-        // then
-        mockMvc.perform(post(BASE_URL)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(accessEntity)))
-                .andExpect(jsonPath("$.dateFrom", equalTo(LocalDate.now().toString())))
-                .andExpect(jsonPath("$.dateTo", equalTo(LocalDate.now().plusDays(1).toString())))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void addShouldThrowInvalidInput() throws Exception {
-
-        // when
-        when(accessService.createAccess(any())).thenThrow(InvalidInputException.class);
-
-        // then
-        mockMvc.perform(post(BASE_URL)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(accessEntity)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void addShouldThrowNotFoundAccessException() throws Exception {
-
-        // when
-        when(accessService.createAccess(any())).thenThrow(NotFoundAccessException.class);
-
-        // then
-        mockMvc.perform(post(BASE_URL)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(accessEntity)))
-                .andExpect(status().isNotFound());
-    }
+//    @Test
+//    void shouldAddAccess() throws Exception {
+//
+//        // when
+//        when(accessService.createAccess(any())).thenReturn(accessEntity);
+//
+//        // then
+//        mockMvc.perform(post(BASE_URL)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(asJsonString(accessEntity)))
+//                .andExpect(jsonPath("$.dateFrom", equalTo(LocalDate.now().toString())))
+//                .andExpect(jsonPath("$.dateTo", equalTo(LocalDate.now().plusDays(1).toString())))
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    void addShouldThrowInvalidInput() throws Exception {
+//
+//        // when
+//        when(accessService.createAccess(any())).thenThrow(InvalidInputException.class);
+//
+//        // then
+//        mockMvc.perform(post(BASE_URL)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(asJsonString(accessEntity)))
+//                .andExpect(status().isBadRequest());
+//    }
+//
+//    @Test
+//    void addShouldThrowNotFoundAccessException() throws Exception {
+//
+//        // when
+//        when(accessService.createAccess(any())).thenThrow(NotFoundAccessException.class);
+//
+//        // then
+//        mockMvc.perform(post(BASE_URL)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(asJsonString(accessEntity)))
+//                .andExpect(status().isNotFound());
+//    }
 
     @Test
     void shouldUpdateAccess() throws Exception {

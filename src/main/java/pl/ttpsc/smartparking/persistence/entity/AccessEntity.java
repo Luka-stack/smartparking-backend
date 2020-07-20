@@ -1,9 +1,7 @@
 package pl.ttpsc.smartparking.persistence.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.springframework.format.annotation.DateTimeFormat;
 import pl.ttpsc.smartparking.persistence.mapper.LocalDateDeserializer;
 import pl.ttpsc.smartparking.persistence.mapper.LocalDateSerializer;
 
@@ -30,17 +28,16 @@ public class AccessEntity implements Serializable {
     private LocalDate dateTo;
 
     @ManyToOne
-    @JsonIgnore
-    private PlateEntity plates;
+    private PlateEntity plate;
 
     public AccessEntity() {
     }
 
-    public AccessEntity(Long id, LocalDate dateFrom, LocalDate dateTo, PlateEntity plates) {
+    public AccessEntity(Long id, LocalDate dateFrom, LocalDate dateTo, PlateEntity plate) {
         this.id = id;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
-        this.plates = plates;
+        this.plate = plate;
     }
 
     public Long getId() {
@@ -67,11 +64,11 @@ public class AccessEntity implements Serializable {
         this.dateTo = dateTo;
     }
 
-    public PlateEntity getPlates() {
-        return plates;
+    public PlateEntity getPlate() {
+        return plate;
     }
 
-    public void setPlates(PlateEntity plates) {
-        this.plates = plates;
+    public void setPlate(PlateEntity plate) {
+        this.plate = plate;
     }
 }

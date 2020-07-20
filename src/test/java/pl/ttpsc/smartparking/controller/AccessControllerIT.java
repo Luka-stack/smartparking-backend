@@ -102,55 +102,55 @@ class AccessControllerIT {
         assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
     }
 
-    @Test
-    void shouldCreateAccess() {
-
-        // given
-        uri = String.format(PATH, port, "");
-        AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
-
-        // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
-                new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
-        Optional<AccessEntity> accessReturned = accessRepository.findById(response.getBody().getId());
-
-        //then
-        assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
-        assertEquals(accessReturned.get().getDateFrom(), createAccess.getDateFrom());
-        assertEquals(accessReturned.get().getDateTo(), createAccess.getDateTo());
-    }
-
-    @Test
-    void createShouldThrowInvalidInputWhenDateFromIsNull() {
-
-        // given
-        uri = String.format(PATH, port, "");
-        AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
-        createAccess.setDateTo(null);
-
-        // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
-                new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
-
-        // then
-        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
-    }
-
-    @Test
-    void createShouldThrowInvalidInputWhenDateToIsNull() {
-
-        // given
-        uri = String.format(PATH, port, "");
-        AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
-        createAccess.setDateTo(null);
-
-        // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
-                new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
-
-        // then
-        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
-    }
+//    @Test
+//    void shouldCreateAccess() {
+//
+//        // given
+//        uri = String.format(PATH, port, "");
+//        AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
+//
+//        // when
+//        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
+//                new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
+//        Optional<AccessEntity> accessReturned = accessRepository.findById(response.getBody().getId());
+//
+//        //then
+//        assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
+//        assertEquals(accessReturned.get().getDateFrom(), createAccess.getDateFrom());
+//        assertEquals(accessReturned.get().getDateTo(), createAccess.getDateTo());
+//    }
+//
+//    @Test
+//    void createShouldThrowInvalidInputWhenDateFromIsNull() {
+//
+//        // given
+//        uri = String.format(PATH, port, "");
+//        AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
+//        createAccess.setDateTo(null);
+//
+//        // when
+//        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
+//                new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
+//
+//        // then
+//        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+//    }
+//
+//    @Test
+//    void createShouldThrowInvalidInputWhenDateToIsNull() {
+//
+//        // given
+//        uri = String.format(PATH, port, "");
+//        AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
+//        createAccess.setDateTo(null);
+//
+//        // when
+//        ResponseEntity<AccessEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
+//                new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
+//
+//        // then
+//        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+//    }
 
     @Test
     void shouldUpdateAccess() {

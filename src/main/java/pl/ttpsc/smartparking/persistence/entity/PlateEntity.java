@@ -17,20 +17,20 @@ public class PlateEntity {
 
     private String lastName;
 
-    private String plate;
+    private String plateStr;
 
-    @OneToMany(mappedBy = "plates")
+    @OneToMany(mappedBy = "plate")
     @JsonIgnore
     private Set<AccessEntity> access;
 
     public PlateEntity() {
     }
 
-    public PlateEntity(Long id, String name, String lastName, String plate, Set<AccessEntity> access) {
+    public PlateEntity(Long id, String name, String lastName, String plateStr, Set<AccessEntity> access) {
         this.id = id;
         this.firstName = name;
         this.lastName = lastName;
-        this.plate = plate;
+        this.plateStr = plateStr;
         this.access = access;
     }
 
@@ -58,12 +58,12 @@ public class PlateEntity {
         this.lastName = lastName;
     }
 
-    public String getPlate() {
-        return plate;
+    public String getPlateStr() {
+        return plateStr;
     }
 
-    public void setPlate(String plate) {
-        this.plate = plate;
+    public void setPlateStr(String plateStr) {
+        this.plateStr = plateStr;
     }
 
     public Set<AccessEntity> getAccess() {
