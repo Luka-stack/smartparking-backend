@@ -31,7 +31,7 @@ import static pl.ttpsc.smartparking.controller.AbstractRestControllerTest.asJson
 
 class PlateControllerUT {
 
-    private final String BASE_URL = "/api/plate";
+    private final String BASE_URL = "/api/plates";
     private final String PLATE_NUM = "FZ12345";
 
     @Mock
@@ -67,7 +67,7 @@ class PlateControllerUT {
         // then
         mockMvc.perform(get(BASE_URL + "/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.plate", equalTo(PLATE_NUM)));
+                .andExpect(jsonPath("$.plateStr", equalTo(PLATE_NUM)));
     }
 
     @Test
@@ -85,8 +85,8 @@ class PlateControllerUT {
         // then
         mockMvc.perform(get(BASE_URL))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].plate", equalTo(PLATE_NUM)))
-                .andExpect(jsonPath("$[1].plate", equalTo(PLATE_NUM)));
+                .andExpect(jsonPath("$[0].plateStr", equalTo(PLATE_NUM)))
+                .andExpect(jsonPath("$[1].plateStr", equalTo(PLATE_NUM)));
 
     }
 
@@ -115,7 +115,7 @@ class PlateControllerUT {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(plateEntity)))
-                .andExpect(jsonPath("$.plate", equalTo(PLATE_NUM)))
+                .andExpect(jsonPath("$.plateStr", equalTo(PLATE_NUM)))
                 .andExpect(status().isOk());
     }
 
@@ -147,7 +147,7 @@ class PlateControllerUT {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(plateEntity)))
-                .andExpect(jsonPath("$.plate", equalTo(PLATE_NUM)))
+                .andExpect(jsonPath("$.plateStr", equalTo(PLATE_NUM)))
                 .andExpect(status().isOk());
     }
 

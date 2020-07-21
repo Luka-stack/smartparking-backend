@@ -7,7 +7,7 @@ import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 
 import java.util.List;
 
-@RequestMapping("/api/access")
+@RequestMapping("/api/accesses")
 public interface AccessApi {
 
     @GetMapping("/{id}")
