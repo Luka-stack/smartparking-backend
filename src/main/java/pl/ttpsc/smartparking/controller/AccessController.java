@@ -1,11 +1,9 @@
 package pl.ttpsc.smartparking.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.ttpsc.smartparking.api.AccessApi;
 import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
-import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.service.AccessService;
 
 import java.util.List;

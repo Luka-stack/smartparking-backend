@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "access")
+@Table(name = "accesses")
 public class AccessEntity implements Serializable {
 
     @Id

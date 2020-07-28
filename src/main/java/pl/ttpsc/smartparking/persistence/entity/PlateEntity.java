@@ -3,11 +3,12 @@ package pl.ttpsc.smartparking.persistence.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "plate")
-public class PlateEntity {
+@Table(name = "plates")
+public class PlateEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

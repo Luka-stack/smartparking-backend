@@ -26,7 +26,7 @@ public class PlateController implements PlateApi {
     @Override
     public ResponseEntity<List<PlateEntity>> getAllPlate() {
 
-       return ResponseEntity.ok(plateService.getAllPlates());
+        return ResponseEntity.ok(plateService.getAllPlates());
     }
 
     @Override

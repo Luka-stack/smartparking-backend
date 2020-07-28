@@ -4,11 +4,8 @@ import org.springframework.stereotype.Service;
 import pl.ttpsc.smartparking.error.exception.ErrorCode;
 import pl.ttpsc.smartparking.error.exception.InvalidInputException;
 import pl.ttpsc.smartparking.error.exception.NotFoundAccessException;
-import pl.ttpsc.smartparking.error.exception.NotFoundPlateException;
 import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
-import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.repository.AccessRepository;
-import pl.ttpsc.smartparking.persistence.repository.PlateRepository;
 
 import java.util.List;
 import java.util.Optional;

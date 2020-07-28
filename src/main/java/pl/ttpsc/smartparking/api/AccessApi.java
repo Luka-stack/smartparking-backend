@@ -3,7 +3,6 @@ package pl.ttpsc.smartparking.api;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
-import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 
 import java.util.List;
 
