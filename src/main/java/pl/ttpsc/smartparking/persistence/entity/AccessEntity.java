@@ -20,13 +20,9 @@ public class AccessEntity implements Serializable {
     private Long id;
 
     @Column(name = "date_from")
-    //@JsonDeserialize(using = LocalDateDeserializer.class)
-    //@JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dateFrom;
 
     @Column(name = "date_to")
-    //@JsonDeserialize(using = LocalDateDeserializer.class)
-    //@JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dateTo;
 
     @ManyToOne

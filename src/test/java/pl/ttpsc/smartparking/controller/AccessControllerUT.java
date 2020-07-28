@@ -13,6 +13,7 @@ import pl.ttpsc.smartparking.error.RestErrorAdvice;
 import pl.ttpsc.smartparking.error.exception.InvalidInputException;
 import pl.ttpsc.smartparking.error.exception.NotFoundAccessException;
 import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
+import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.service.AccessService;
 
 import java.time.LocalDate;
@@ -58,10 +59,9 @@ public class AccessControllerUT {
     void shouldReturnOneAccess() throws Exception {
 
         // given
-        AccessEntity returnedAccessEntity = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(1));
 
         // when
-        when(accessService.getAccessById(anyLong())).thenReturn(returnedAccessEntity);
+        when(accessService.getAccessById(anyLong())).thenReturn(accessEntity);
 
         // then
         mockMvc.perform(get(BASE_URL + "/1"))
@@ -74,13 +74,10 @@ public class AccessControllerUT {
     void shouldReturnListOfAccesses() throws Exception {
 
         // given
-        List<AccessEntity> returnedAccessEntities = Arrays.asList(
-                createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(1)),
-                createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(1))
-        );
+        List<AccessEntity> entityList = Arrays.asList(accessEntity, accessEntity);
 
         // when
-        when(accessService.getAllAccesses()).thenReturn(returnedAccessEntities);
+        when(accessService.getAllAccesses()).thenReturn(entityList);
 
         // then
         mockMvc.perform(get(BASE_URL))
@@ -207,6 +204,10 @@ public class AccessControllerUT {
         AccessEntity accessEntity = new AccessEntity();
         accessEntity.setDateFrom(dateFrom);
         accessEntity.setDateTo(dateTo);
+
+        PlateEntity plateEntity = new PlateEntity();
+        plateEntity.setId(1L);
+        accessEntity.setPlate(plateEntity);
 
         return accessEntity;
     }

@@ -20,17 +20,20 @@ public class AccessEntitySerializer extends JsonSerializer<AccessEntity> {
             jsonGenerator.writeNumberField("id", accessEntity.getId());
         }
 
-        jsonGenerator.writeObjectField("dateFrom", accessEntity.getDateFrom());
-        jsonGenerator.writeObjectField("dateTo", accessEntity.getDateTo());
-
-        jsonGenerator.writeObjectFieldStart("Access");
-        if (accessEntity.getPlate() != null) {
-            jsonGenerator.writeNumberField("id", accessEntity.getPlate().getId());
-            jsonGenerator.writeStringField("firstName", accessEntity.getPlate().getFirstName());
-            jsonGenerator.writeStringField("lastName", accessEntity.getPlate().getLastName());
-            jsonGenerator.writeStringField("plateStr", accessEntity.getPlate().getPlateStr());
-            jsonGenerator.writeEndObject();
+        if (accessEntity.getDateFrom() != null) {
+            jsonGenerator.writeStringField("dateFrom", accessEntity.getDateFrom().toString());
         }
+
+        if (accessEntity.getDateTo() != null) {
+            jsonGenerator.writeStringField("dateTo", accessEntity.getDateTo().toString());
+        }
+
+        jsonGenerator.writeObjectFieldStart("plate");
+        jsonGenerator.writeNumberField("id", accessEntity.getPlate().getId());
+        jsonGenerator.writeStringField("firstName", accessEntity.getPlate().getFirstName());
+        jsonGenerator.writeStringField("lastName", accessEntity.getPlate().getLastName());
+        jsonGenerator.writeStringField("plateStr", accessEntity.getPlate().getPlateStr());
+        jsonGenerator.writeEndObject();
 
         jsonGenerator.writeEndObject();
     }

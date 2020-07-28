@@ -29,6 +29,7 @@ public class PlateEntity implements Serializable {
     }
 
     public PlateEntity(Long id, String name, String lastName, String plateStr, Set<AccessEntity> accesses) {
+
         this.id = id;
         this.firstName = name;
         this.lastName = lastName;

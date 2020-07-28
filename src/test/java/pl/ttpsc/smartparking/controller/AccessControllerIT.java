@@ -10,6 +10,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import pl.ttpsc.smartparking.error.Error;
+import pl.ttpsc.smartparking.error.exception.ErrorCode;
 import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
 import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.repository.AccessRepository;
@@ -49,10 +51,10 @@ class AccessControllerIT {
     void setUp() {
 
         inBaseAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(1));
-        newAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(1));
+        newAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(2));
         PlateEntity plateInBase = createPlateEntity("FKR12345");
 
-        plateRepository.save(plateInBase);
+        plateInBase = plateRepository.save(plateInBase);
 
         inBaseAccess.setPlate(plateInBase);
         newAccess.setPlate(plateInBase);
@@ -63,6 +65,7 @@ class AccessControllerIT {
     void tearDown() {
 
         accessRepository.deleteAllInBatch();
+        plateRepository.deleteAllInBatch();
     }
 
     @Test
@@ -99,14 +102,16 @@ class AccessControllerIT {
     void getShouldThrowNotFoundAccessException() {
 
         // given
-        url = String.format(PATH, port, 99);
+        url = String.format(PATH, port, 123L);
+        Error expectedError = new Error("Access not found", ErrorCode.ACCESS_NOT_FOUND);
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.GET,
-                new HttpEntity<>(inBaseAccess, new HttpHeaders()), AccessEntity.class);
+        ResponseEntity<Error> response = restTemplate.getForEntity(url, Error.class);
 
         // then
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(expectedError.getErrorCode(), Objects.requireNonNull(response.getBody()).getErrorCode());
+        assertEquals(expectedError.getMessage(), response.getBody().getMessage());
     }
 
     @Test
@@ -116,18 +121,16 @@ class AccessControllerIT {
         url = String.format(PATH, port, "");
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.POST,
-                new HttpEntity<>(newAccess, new HttpHeaders()), AccessEntity.class);
+        ResponseEntity<AccessEntity> response = restTemplate.postForEntity(url, newAccess, AccessEntity.class);
+        Optional<AccessEntity> accessReturned = accessRepository.findById(
+                Objects.requireNonNull(response.getBody()).getId());
 
-        System.out.println(response);
+        assert accessReturned.isPresent();
 
-//        Optional<AccessEntity> accessReturned = accessRepository.findById(
-//                Objects.requireNonNull(response.getBody()).getId());
-//
-//        //then
-//        assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
-//        assertEquals(Objects.requireNonNull(response.getBody()).getDateFrom(), newAccess.getDateFrom());
-//        assertEquals(response.getBody().getDateTo(), newAccess.getDateTo());
+        //then
+        assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
+        assertEquals(accessReturned.get().getDateFrom(), newAccess.getDateFrom());
+        assertEquals(accessReturned.get().getDateTo(), newAccess.getDateTo());
     }
 
     @Test
@@ -135,15 +138,16 @@ class AccessControllerIT {
 
         // given
         url = String.format(PATH, port, "");
-        AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
-        createAccess.setDateTo(null);
+        Error expectedError = new Error("Invalid input -> dateFrom", ErrorCode.ACCESS_INVALID_INPUT);
+        newAccess.setDateFrom(null);
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.POST,
-                new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
+        ResponseEntity<Error> response = restTemplate.postForEntity(url, newAccess, Error.class);
 
         // then
-        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(expectedError.getErrorCode(), Objects.requireNonNull(response.getBody()).getErrorCode());
+        assertEquals(expectedError.getMessage(), response.getBody().getMessage());
     }
 
     @Test
@@ -151,15 +155,16 @@ class AccessControllerIT {
 
         // given
         url = String.format(PATH, port, "");
-        AccessEntity createAccess = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
-        createAccess.setDateTo(null);
+        Error expectedError = new Error("Invalid input -> dateTo", ErrorCode.ACCESS_INVALID_INPUT);
+        newAccess.setDateTo(null);
 
         // when
-        ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.POST,
-                new HttpEntity<>(createAccess, new HttpHeaders()), AccessEntity.class);
+        ResponseEntity<Error> response = restTemplate.postForEntity(url, newAccess, Error.class);
 
         // then
-        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(expectedError.getErrorCode(), Objects.requireNonNull(response.getBody()).getErrorCode());
+        assertEquals(expectedError.getMessage(), response.getBody().getMessage());
     }
 
     @Test
@@ -167,17 +172,18 @@ class AccessControllerIT {
 
         // given
         url = String.format(PATH, port, inBaseAccess.getId());
-        AccessEntity accessUpdate = createAccessEntity(LocalDate.now(), LocalDate.now().plusDays(10));
 
         // when
         ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
-                new HttpEntity<>(accessUpdate, new HttpHeaders()), AccessEntity.class);
+                new HttpEntity<>(newAccess, new HttpHeaders()), AccessEntity.class);
         Optional<AccessEntity> accessReturned = accessRepository.findById(inBaseAccess.getId());
 
+        assert accessReturned.isPresent();
+
         //then
-        assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
-        assertEquals(accessReturned.get().getDateFrom(), accessUpdate.getDateFrom());
-        assertEquals(accessReturned.get().getDateTo(), accessUpdate.getDateTo());
+        assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
+        assertEquals(newAccess.getDateFrom(), accessReturned.get().getDateFrom());
+        assertEquals(newAccess.getDateTo(), accessReturned.get().getDateTo());
     }
 
     @Test
@@ -199,7 +205,7 @@ class AccessControllerIT {
 
         // given
         url = String.format(PATH, port, inBaseAccess.getId());
-        newAccess.setPlate(null);
+        newAccess.setDateFrom(null);
 
         // when
         ResponseEntity<AccessEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
@@ -211,6 +217,7 @@ class AccessControllerIT {
 
     @Test
     void updateShouldThrowInvalidInputWhenDateToIsNull() {
+
         // given
         url = String.format(PATH, port, inBaseAccess.getId());
         newAccess.setDateTo(null);
