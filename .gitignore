@@ -1,3 +1,5 @@
+smartparking.iml
+
 # Eclipse
 /**/.classpath/
 /**/.project/
@@ -11,6 +13,9 @@
 /**/*.iws
 /**/out/
 /**/classes/
+target/**
+src/main/resources/application.properties
+target/
 # Gradle
 /**/.gradle/
 /**/build/
@@ -30,3 +35,4 @@
 esc.iml
 /ui/out-tsc/
 cv_files/
+target/
