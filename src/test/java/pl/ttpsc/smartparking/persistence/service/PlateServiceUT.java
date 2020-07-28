@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class PlateServiceUT {
+class PlateServiceUT {
 
     private PlateEntity plateEntity;
     private PlateService plateService;
@@ -61,7 +61,7 @@ public class PlateServiceUT {
         List<PlateEntity> returnedListOfPlates = plateService.getAllPlates();
 
         // then
-        assertEquals(returnedListOfPlates.size(), 2);
+        assertEquals(2, returnedListOfPlates.size());
         assertEquals(returnedListOfPlates.get(0), plateEntity);
         assertEquals(returnedListOfPlates.get(1), plateEntity);
     }
@@ -75,8 +75,8 @@ public class PlateServiceUT {
         );
 
         // then
-        assertEquals(exception.getMessage(), "Access not found");
-        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_NOT_FOUND);
+        assertEquals("Access not found", exception.getMessage());
+        assertEquals(ErrorCode.ACCESS_NOT_FOUND, exception.getErrorCode());
     }
 
     @Test
@@ -104,8 +104,8 @@ public class PlateServiceUT {
         );
 
         // then
-        assertEquals(exception.getMessage(), "Invalid input -> plate");
-        assertEquals(exception.getErrorCode(), ErrorCode.PLATE_INVALID_INPUT);
+        assertEquals("Invalid input -> plate", exception.getMessage());
+        assertEquals(ErrorCode.PLATE_INVALID_INPUT, exception.getErrorCode());
     }
 
     @Test
@@ -131,8 +131,8 @@ public class PlateServiceUT {
         );
 
         // then
-        assertEquals(exception.getMessage(), "Plate not found");
-        assertEquals(exception.getErrorCode(), ErrorCode.PLATE_NOT_FOUND);
+        assertEquals("Plate not found", exception.getMessage());
+        assertEquals(ErrorCode.PLATE_NOT_FOUND, exception.getErrorCode());
     }
 
     @Test
@@ -147,8 +147,8 @@ public class PlateServiceUT {
         );
 
         // then
-        assertEquals(exception.getMessage(), "Invalid input -> plate");
-        assertEquals(exception.getErrorCode(), ErrorCode.PLATE_INVALID_INPUT);
+        assertEquals("Invalid input -> plate", exception.getMessage());
+        assertEquals(ErrorCode.PLATE_INVALID_INPUT, exception.getErrorCode());
     }
 
     @Test

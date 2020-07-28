@@ -1,7 +1,5 @@
 package pl.ttpsc.smartparking.persistence.service;
 
-import java.util.Arrays;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -10,12 +8,17 @@ import pl.ttpsc.smartparking.error.exception.ErrorCode;
 import pl.ttpsc.smartparking.error.exception.InvalidInputException;
 import pl.ttpsc.smartparking.error.exception.NotFoundAccessException;
 import pl.ttpsc.smartparking.persistence.entity.AccessEntity;
+import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.repository.AccessRepository;
+import pl.ttpsc.smartparking.persistence.repository.PlateRepository;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -28,15 +31,27 @@ class AccessServiceUT {
     @Mock
     private AccessRepository accessRepository;
 
+    @Mock
+    private PlateRepository plateRepository;
+
     @BeforeEach
     void setUp() {
 
         MockitoAnnotations.initMocks(this);
         accessService = new AccessService(accessRepository);
 
+        accessEntity = createAccessEntity();
+
+    }
+
+    private AccessEntity createAccessEntity() {
+
         accessEntity = new AccessEntity();
         accessEntity.setDateFrom(LocalDate.now());
         accessEntity.setDateTo(LocalDate.now().plusDays(4));
+        accessEntity.setPlate(new PlateEntity());
+
+        return accessEntity;
     }
 
     @Test
@@ -62,7 +77,7 @@ class AccessServiceUT {
         List<AccessEntity> returnedListOfAccesses = accessService.getAllAccesses();
 
         // then
-        assertEquals(returnedListOfAccesses.size(), 2);
+        assertEquals(2, returnedListOfAccesses.size());
         assertEquals(returnedListOfAccesses.get(0), accessEntity);
         assertEquals(returnedListOfAccesses.get(1), accessEntity);
     }
@@ -76,8 +91,8 @@ class AccessServiceUT {
         );
 
         // then
-        assertEquals(exception.getMessage(), "Access not found");
-        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_NOT_FOUND);
+        assertEquals("Access not found", exception.getMessage());
+        assertEquals(ErrorCode.ACCESS_NOT_FOUND, exception.getErrorCode());
     }
 
     @Test
@@ -105,8 +120,8 @@ class AccessServiceUT {
         );
 
         // then
-        assertEquals(exception.getMessage(), "Invalid input -> dateFrom");
-        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
+        assertEquals("Invalid input -> dateFrom", exception.getMessage());
+        assertEquals(ErrorCode.ACCESS_INVALID_INPUT, exception.getErrorCode());
     }
 
     @Test
@@ -121,8 +136,8 @@ class AccessServiceUT {
         );
 
         // then
-        assertEquals(exception.getMessage(), "Invalid input -> dateTo");
-        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
+        assertEquals("Invalid input -> dateTo", exception.getMessage());
+        assertEquals(ErrorCode.ACCESS_INVALID_INPUT, exception.getErrorCode());
     }
 
     @Test
@@ -148,8 +163,8 @@ class AccessServiceUT {
         );
 
         // then
-        assertEquals(exception.getMessage(), "Access not found");
-        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_NOT_FOUND);
+        assertEquals("Access not found", exception.getMessage());
+        assertEquals(ErrorCode.ACCESS_NOT_FOUND, exception.getErrorCode());
     }
 
     @Test
@@ -164,8 +179,8 @@ class AccessServiceUT {
         );
 
         // then
-        assertEquals(exception.getMessage(), "Invalid input -> dateFrom");
-        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
+        assertEquals("Invalid input -> dateFrom", exception.getMessage());
+        assertEquals(ErrorCode.ACCESS_INVALID_INPUT, exception.getErrorCode());
     }
 
     @Test
@@ -180,8 +195,8 @@ class AccessServiceUT {
         );
 
         // then
-        assertEquals(exception.getMessage(), "Invalid input -> dateTo");
-        assertEquals(exception.getErrorCode(), ErrorCode.ACCESS_INVALID_INPUT);
+        assertEquals("Invalid input -> dateTo", exception.getMessage());
+        assertEquals(ErrorCode.ACCESS_INVALID_INPUT, exception.getErrorCode());
     }
 
     @Test

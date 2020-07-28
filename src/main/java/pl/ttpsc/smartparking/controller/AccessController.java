@@ -29,18 +29,20 @@ public class AccessController implements AccessApi {
         return ResponseEntity.ok(accessService.getAllAccesses());
     }
 
-    @Override
-    public ResponseEntity<AccessEntity> getAccessByPlate(String plate) {
-
-        AccessEntity accessEntity = accessService.getAccessByPlate(plate);
-
-        return ResponseEntity.ok(accessEntity);
-    }
+//    @Override
+//    public ResponseEntity<AccessEntity> getAccessByPlate(String plate) {
+//
+//        AccessEntity accessEntity = accessService.getAccessByPlate(plate);
+//
+//        return ResponseEntity.ok(accessEntity);
+//    }
 
     @Override
     public ResponseEntity<AccessEntity> createAccess(AccessEntity accessEntity) {
 
-        return ResponseEntity.ok(accessService.createAccess(accessEntity));
+        AccessEntity createdEntity = accessService.createAccess(accessEntity);
+
+        return ResponseEntity.ok(createdEntity);
     }
 
     @Override

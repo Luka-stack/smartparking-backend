@@ -2,6 +2,7 @@ package pl.ttpsc.smartparking.persistence.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import pl.ttpsc.smartparking.persistence.mapper.AccessEntitySerializer;
 import pl.ttpsc.smartparking.persistence.mapper.LocalDateDeserializer;
 import pl.ttpsc.smartparking.persistence.mapper.LocalDateSerializer;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "accesses")
+@JsonSerialize(using = AccessEntitySerializer.class)
 public class AccessEntity implements Serializable {
 
     @Id
@@ -18,13 +20,13 @@ public class AccessEntity implements Serializable {
     private Long id;
 
     @Column(name = "date_from")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
+    //@JsonDeserialize(using = LocalDateDeserializer.class)
+    //@JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dateFrom;
 
     @Column(name = "date_to")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
+    //@JsonDeserialize(using = LocalDateDeserializer.class)
+    //@JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dateTo;
 
     @ManyToOne

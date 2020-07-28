@@ -30,16 +30,16 @@ public class AccessService {
         return accessRepository.findAll();
     }
 
-    public AccessEntity getAccessByPlate(String plate) {
-
-        Optional<AccessEntity> accessEntity = accessRepository.getAccessByPlate(plate);
-
-        if (!accessEntity.isPresent()) {
-            throw new NotFoundAccessException("Access not found", ErrorCode.ACCESS_NOT_FOUND);
-        }
-
-        return accessEntity.get();
-    }
+//    public AccessEntity getAccessByPlate(String plate) {
+//
+//        Optional<AccessEntity> accessEntity = accessRepository.getAccessByPlate(plate);
+//
+//        if (!accessEntity.isPresent()) {
+//            throw new NotFoundAccessException("Access not found", ErrorCode.ACCESS_NOT_FOUND);
+//        }
+//
+//        return accessEntity.get();
+//    }
 
     public AccessEntity createAccess(AccessEntity accessEntity) {
 

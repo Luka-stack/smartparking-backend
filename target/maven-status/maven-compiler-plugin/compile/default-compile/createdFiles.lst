@@ -3,6 +3,7 @@ pl\ttpsc\smartparking\error\exception\NotFoundPlateException.class
 pl\ttpsc\smartparking\error\exception\ErrorCode.class
 pl\ttpsc\smartparking\persistence\mapper\LocalDateSerializer.class
 pl\ttpsc\smartparking\api\PlateApi.class
+pl\ttpsc\smartparking\persistence\mapper\PlateEntitySerializer.class
 pl\ttpsc\smartparking\controller\AccessController.class
 pl\ttpsc\smartparking\error\exception\NotFoundErrorCodeException.class
 pl\ttpsc\smartparking\persistence\repository\AccessRepository.class
@@ -14,6 +15,7 @@ pl\ttpsc\smartparking\error\exception\InvalidInputException.class
 pl\ttpsc\smartparking\persistence\entity\PlateEntity.class
 pl\ttpsc\smartparking\persistence\mapper\LocalDateDeserializer.class
 pl\ttpsc\smartparking\error\exception\ServiceException.class
+pl\ttpsc\smartparking\persistence\mapper\AccessEntitySerializer.class
 pl\ttpsc\smartparking\error\RestErrorAdvice.class
 pl\ttpsc\smartparking\controller\PlateController.class
 pl\ttpsc\smartparking\persistence\service\AccessService.class

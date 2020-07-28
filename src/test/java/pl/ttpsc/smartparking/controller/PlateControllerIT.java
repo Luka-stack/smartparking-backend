@@ -8,15 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.ttpsc.smartparking.persistence.entity.PlateEntity;
 import pl.ttpsc.smartparking.persistence.repository.PlateRepository;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +23,7 @@ class PlateControllerIT {
 
     private static final String PATH = "http://localhost:%d/api/plates/%s";
 
-    private String uri;
+    private String url;
 
     @LocalServerPort
     private int port;
@@ -56,60 +53,59 @@ class PlateControllerIT {
     void shouldReturnOnePlate() {
 
         // given
-        uri = String.format(PATH, port, plateInBase.getId());
+        url = String.format(PATH, port, plateInBase.getId());
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.GET,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.GET,
                 new HttpEntity<>(plateInBase, new HttpHeaders()), PlateEntity.class);
 
         //then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
-        assertEquals(response.getBody().getPlateStr(), plateInBase.getPlateStr());
+        assertEquals(Objects.requireNonNull(response.getBody()).getPlateStr(), plateInBase.getPlateStr());
     }
 
     @Test
     void shouldReturnListOfPlates() {
 
         // given
-        uri = String.format(PATH, port, "");
+        url = String.format(PATH, port, "");
 
         // when
-        ResponseEntity<List<PlateEntity>> response = restTemplate.exchange(uri, HttpMethod.GET,
-                new HttpEntity<>(Collections.singletonList(plateInBase), new HttpHeaders()),
-                new ParameterizedTypeReference<List<PlateEntity>>() {});
+        ResponseEntity<PlateEntity[]> response = restTemplate.getForEntity(url, PlateEntity[].class);
 
         //then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
-        assertEquals(response.getBody().size(), 1);
-        assertEquals(response.getBody().get(0).getPlateStr(), plateInBase.getPlateStr());
+        assertEquals(1, Objects.requireNonNull(response.getBody()).length);
+        assertEquals(response.getBody()[0].getPlateStr(), plateInBase.getPlateStr());
     }
 
     @Test
     void getShouldThrowNotFoundPlateException() {
 
         // given
-        uri = String.format(PATH, port, 99);
+        url = String.format(PATH, port, 99);
         PlateEntity plateReturned = createPlateEntity("FZ12345");
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.GET,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.GET,
                 new HttpEntity<>(plateReturned, new HttpHeaders()), PlateEntity.class);
 
         // then
-        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
     void shouldCreatePlate() {
 
         // given
-        uri = String.format(PATH, port, "");
+        url = String.format(PATH, port, "");
         PlateEntity plateCreate = createPlateEntity("FZ12345");
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.POST,
                 new HttpEntity<>(plateCreate, new HttpHeaders()), PlateEntity.class);
-        Optional<PlateEntity> plateReturned = plateRepository.findById(response.getBody().getId());
+        Optional<PlateEntity> plateReturned = plateRepository.findById(
+                Objects.requireNonNull(response.getBody()).getId());
 
         // then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
@@ -120,27 +116,27 @@ class PlateControllerIT {
     void createShouldThrowInvalidInputWhenPlateIsNull() {
 
         // given
-        uri = String.format(PATH, port, "");
+        url = String.format(PATH, port, "");
         PlateEntity plateCreate = createPlateEntity("FZ12345");
         plateCreate.setPlateStr(null);
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.POST,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.POST,
                 new HttpEntity<>(plateCreate, new HttpHeaders()), PlateEntity.class);
 
         // then
-        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
     void shouldUpdatePlate() {
 
         // given
-        uri = String.format(PATH, port, plateInBase.getId());
+        url = String.format(PATH, port, plateInBase.getId());
         PlateEntity plateUpdate = createPlateEntity("FZ12345");
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
                 new HttpEntity<>(plateUpdate, new HttpHeaders()), PlateEntity.class);
         Optional<PlateEntity> plateReturned = plateRepository.findById(plateInBase.getId());
 
@@ -153,41 +149,41 @@ class PlateControllerIT {
     void updateShouldThrowNotFoundPlateException() {
 
         // given
-        uri = String.format(PATH, port, 190);
+        url = String.format(PATH, port, 190);
         PlateEntity plateUpdate = createPlateEntity("FZ12345");
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
                 new HttpEntity<>(plateUpdate, new HttpHeaders()), PlateEntity.class);
 
         // then
-        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
     void updateShouldThrowInvalidInputWhenPlateIsNull() {
 
         // given
-        uri = String.format(PATH, port, plateInBase.getId());
+        url = String.format(PATH, port, plateInBase.getId());
         PlateEntity plateUpdate = createPlateEntity("FZ12345");
         plateUpdate.setPlateStr(null);
 
         // when
-        ResponseEntity<PlateEntity> response = restTemplate.exchange(uri, HttpMethod.PUT,
+        ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
                 new HttpEntity<>(plateUpdate, new HttpHeaders()), PlateEntity.class);
 
         // then
-        assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
     void shouldDeleteAccessById() {
 
         //given
-        uri = String.format(PATH, port, plateInBase.getId());
+        url = String.format(PATH, port, plateInBase.getId());
 
         //when
-        restTemplate.delete(uri);
+        restTemplate.delete(url);
         boolean isExist = plateRepository.existsById(plateInBase.getId());
 
         //then
