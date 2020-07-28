@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PlateControllerIT {
 
-    private static final String PATH = "http://localhost:%d/api/plate/%s";
+    private static final String PATH = "http://localhost:%d/api/plates/%s";
 
     private String uri;
 

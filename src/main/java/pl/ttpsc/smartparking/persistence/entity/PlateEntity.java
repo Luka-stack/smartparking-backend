@@ -22,17 +22,17 @@ public class PlateEntity implements Serializable {
 
     @OneToMany(mappedBy = "plate")
     @JsonIgnore
-    private Set<AccessEntity> access;
+    private Set<AccessEntity> accesses;
 
     public PlateEntity() {
     }
 
-    public PlateEntity(Long id, String name, String lastName, String plateStr, Set<AccessEntity> access) {
+    public PlateEntity(Long id, String name, String lastName, String plateStr, Set<AccessEntity> accesses) {
         this.id = id;
         this.firstName = name;
         this.lastName = lastName;
         this.plateStr = plateStr;
-        this.access = access;
+        this.accesses = accesses;
     }
 
     public Long getId() {
@@ -67,11 +67,11 @@ public class PlateEntity implements Serializable {
         this.plateStr = plateStr;
     }
 
-    public Set<AccessEntity> getAccess() {
-        return access;
+    public Set<AccessEntity> getAccesses() {
+        return accesses;
     }
 
-    public void setAccess(Set<AccessEntity> access) {
-        this.access = access;
+    public void setAccesses(Set<AccessEntity> accesses) {
+        this.accesses = accesses;
     }
 }
