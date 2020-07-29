@@ -1,5 +1,6 @@
 package pl.ttpsc.smartparking.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import pl.ttpsc.smartparking.persistence.mapper.PlateEntitySerializer;
 
@@ -9,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "plates")
-@JsonSerialize(using = PlateEntitySerializer.class)
+//@JsonSerialize(using = PlateEntitySerializer.class)
 public class PlateEntity implements Serializable {
 
     @Id
@@ -23,6 +24,7 @@ public class PlateEntity implements Serializable {
     private String plateStr;
 
     @OneToMany(mappedBy = "plate")
+    @JsonIgnoreProperties({ "plate" })
     private Set<AccessEntity> accesses;
 
     public PlateEntity() {
