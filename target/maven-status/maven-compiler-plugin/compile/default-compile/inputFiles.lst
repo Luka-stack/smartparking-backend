@@ -3,7 +3,6 @@ D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\contro
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\controller\PlateController.java
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\api\AccessApi.java
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\error\exception\InvalidInputException.java
-D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\persistence\mapper\AccessEntitySerializer.java
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\error\RestErrorAdvice.java
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\api\PlateApi.java
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\error\exception\NotFoundPlateException.java
@@ -18,6 +17,5 @@ D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\persis
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\error\exception\ServiceException.java
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\persistence\repository\PlateRepository.java
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\persistence\mapper\LocalDateSerializer.java
-D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\persistence\mapper\PlateEntitySerializer.java
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\persistence\service\AccessService.java
 D:\New folder\jv\smartparking-backend\src\main\java\pl\ttpsc\smartparking\persistence\service\PlateService.java

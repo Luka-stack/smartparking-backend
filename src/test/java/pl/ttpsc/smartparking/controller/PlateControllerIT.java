@@ -61,7 +61,7 @@ class PlateControllerIT {
 
         //then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
-        assertEquals(Objects.requireNonNull(response.getBody()).getPlateStr(), plateInBase.getPlateStr());
+        assertEquals(Objects.requireNonNull(response.getBody()).getPlateNum(), plateInBase.getPlateNum());
     }
 
     @Test
@@ -76,7 +76,7 @@ class PlateControllerIT {
         //then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
         assertEquals(1, Objects.requireNonNull(response.getBody()).length);
-        assertEquals(response.getBody()[0].getPlateStr(), plateInBase.getPlateStr());
+        assertEquals(response.getBody()[0].getPlateNum(), plateInBase.getPlateNum());
     }
 
     @Test
@@ -109,7 +109,7 @@ class PlateControllerIT {
 
         // then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
-        assertEquals(plateReturned.get().getPlateStr(), plateCreate.getPlateStr());
+        assertEquals(plateReturned.get().getPlateNum(), plateCreate.getPlateNum());
     }
 
     @Test
@@ -118,7 +118,7 @@ class PlateControllerIT {
         // given
         url = String.format(PATH, port, "");
         PlateEntity plateCreate = createPlateEntity("FZ12345");
-        plateCreate.setPlateStr(null);
+        plateCreate.setPlateNum(null);
 
         // when
         ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.POST,
@@ -142,7 +142,7 @@ class PlateControllerIT {
 
         // then
         assertEquals(response.getStatusCodeValue(), HttpStatus.OK.value());
-        assertEquals(plateReturned.get().getPlateStr(), plateUpdate.getPlateStr());
+        assertEquals(plateReturned.get().getPlateNum(), plateUpdate.getPlateNum());
     }
 
     @Test
@@ -166,7 +166,7 @@ class PlateControllerIT {
         // given
         url = String.format(PATH, port, plateInBase.getId());
         PlateEntity plateUpdate = createPlateEntity("FZ12345");
-        plateUpdate.setPlateStr(null);
+        plateUpdate.setPlateNum(null);
 
         // when
         ResponseEntity<PlateEntity> response = restTemplate.exchange(url, HttpMethod.PUT,
@@ -193,7 +193,7 @@ class PlateControllerIT {
     private PlateEntity createPlateEntity(String plate) {
 
         PlateEntity plateEntity = new PlateEntity();
-        plateEntity.setPlateStr(plate);
+        plateEntity.setPlateNum(plate);
 
         return plateEntity;
     }

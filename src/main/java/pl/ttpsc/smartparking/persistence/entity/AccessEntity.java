@@ -1,11 +1,6 @@
 package pl.ttpsc.smartparking.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import pl.ttpsc.smartparking.persistence.mapper.AccessEntitySerializer;
-import pl.ttpsc.smartparking.persistence.mapper.LocalDateDeserializer;
-import pl.ttpsc.smartparking.persistence.mapper.LocalDateSerializer;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +8,6 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "accesses")
-//@JsonSerialize(using = AccessEntitySerializer.class)
 public class AccessEntity implements Serializable {
 
     @Id

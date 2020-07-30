@@ -35,7 +35,7 @@ class PlateServiceUT {
         plateService = new PlateService(plateRepository);
 
         plateEntity = new PlateEntity();
-        plateEntity.setPlateStr("FZI12345");
+        plateEntity.setPlateNum("FZI12345");
     }
 
     @Test
@@ -96,7 +96,7 @@ class PlateServiceUT {
     void createShouldThrowsInvalidInputExceptionWhenPlateIsNull() {
 
         // given
-        plateEntity.setPlateStr(null);
+        plateEntity.setPlateNum(null);
 
         // when
         InvalidInputException exception = assertThrows(
@@ -139,7 +139,7 @@ class PlateServiceUT {
     void updateShouldThrowsInvalidInputExceptionWhenPlateIsNull() {
 
         // given
-        plateEntity.setPlateStr(null);
+        plateEntity.setPlateNum(null);
 
         // when
         InvalidInputException exception = assertThrows(

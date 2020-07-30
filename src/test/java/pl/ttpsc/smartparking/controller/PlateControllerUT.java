@@ -192,7 +192,7 @@ class PlateControllerUT {
     private PlateEntity createPlateEntity(String plate) {
 
         PlateEntity plateEntity = new PlateEntity();
-        plateEntity.setPlateStr(plate);
+        plateEntity.setPlateNum(plate);
 
         return plateEntity;
     }

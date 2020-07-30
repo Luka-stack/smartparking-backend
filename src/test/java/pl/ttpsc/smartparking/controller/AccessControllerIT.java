@@ -257,7 +257,7 @@ class AccessControllerIT {
     private PlateEntity createPlateEntity(String plateStr) {
 
         PlateEntity plateEntity = new PlateEntity();
-        plateEntity.setPlateStr(plateStr);
+        plateEntity.setPlateNum(plateStr);
 
         return plateEntity;
     }

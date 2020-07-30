@@ -1,8 +1,6 @@
 package pl.ttpsc.smartparking.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import pl.ttpsc.smartparking.persistence.mapper.PlateEntitySerializer;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,7 +8,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "plates")
-//@JsonSerialize(using = PlateEntitySerializer.class)
 public class PlateEntity implements Serializable {
 
     @Id
@@ -21,21 +18,21 @@ public class PlateEntity implements Serializable {
 
     private String lastName;
 
-    private String plateStr;
+    private String plateNum;
 
-    @OneToMany(mappedBy = "plate")
+    @OneToMany(mappedBy = "plate", cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties({ "plate" })
     private Set<AccessEntity> accesses;
 
     public PlateEntity() {
     }
 
-    public PlateEntity(Long id, String name, String lastName, String plateStr, Set<AccessEntity> accesses) {
+    public PlateEntity(Long id, String name, String lastName, String plateNum, Set<AccessEntity> accesses) {
 
         this.id = id;
         this.firstName = name;
         this.lastName = lastName;
-        this.plateStr = plateStr;
+        this.plateNum = plateNum;
         this.accesses = accesses;
     }
 
@@ -63,12 +60,12 @@ public class PlateEntity implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getPlateStr() {
-        return plateStr;
+    public String getPlateNum() {
+        return plateNum;
     }
 
-    public void setPlateStr(String plateStr) {
-        this.plateStr = plateStr;
+    public void setPlateNum(String plateNum) {
+        this.plateNum = plateNum;
     }
 
     public Set<AccessEntity> getAccesses() {

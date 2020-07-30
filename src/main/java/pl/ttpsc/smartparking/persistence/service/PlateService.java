@@ -32,7 +32,7 @@ public class PlateService {
 
     public PlateEntity createPlate(PlateEntity plateEntity) {
 
-        if (plateEntity.getPlateStr() == null) {
+        if (plateEntity.getPlateNum() == null) {
             throw new InvalidInputException("Invalid input -> plate", ErrorCode.PLATE_INVALID_INPUT);
         }
 
@@ -41,7 +41,7 @@ public class PlateService {
 
     public PlateEntity updatePlate(Long id, PlateEntity plateEntity) {
 
-        if (plateEntity.getPlateStr() == null) {
+        if (plateEntity.getPlateNum() == null) {
             throw new InvalidInputException("Invalid input -> plate", ErrorCode.PLATE_INVALID_INPUT);
         }
 
